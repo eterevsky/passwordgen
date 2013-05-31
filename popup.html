@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="main.css" rel="stylesheet">
+  <script src="js/main.js" type="text/javascript"></script>
 </head>
 </body>
-  <div>
-    Profile:
-    <div><input type="radio" name="profile" value="default">Default</div>
-    <div><input type="radio" name="profile" value="other">Other</div>
+  <div id="profile-block" class="options-block">
+    <div class="option-title">Profile:</div>
+    <div class="profile-option">
+      <input type="radio" name="profile" value="default">Default
+    </div>
+    <div class="profile-option">
+      <input type="radio" name="profile" value="other">Other
+    </div>
+  </div>
+  <div class="options-block">
+    <div class="option-title">Password:</div>
+    <div id="password-line">
+      <input type="password" id="password" size="20">
+      <span id="password-yes" class="hidden">✓</span>
+      <span id="password-no">×</span>
+  </div>
+  <div class="options-block">
+    <div class="option-title">Domain:</div>
+    <input type="text" id="domain" size="20">
+  </div>
+  <div class="options-block">
+    <div class="option-title">Generated password:</div>
+    <input type="text" id="generated-password" size="20" readonly value="abc">
+  </div>
+  <div id="buttons">
+    <button id="button-insert">Insert</button>
+    <button id="button-copy">Copy</button>
+    <button id="button-options">Options</button>
   </div>
 </body>
 </html>

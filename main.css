@@ -1,0 +1,50 @@
+body {
+  font-family: sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.options-block {
+  margin-bottom: 5px;
+}
+
+.option-title {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.profile-option {
+  white-space: nowrap;
+}
+
+input[type="password"], input[type="text"] {
+  border: 1px solid #000;
+}
+
+#password-line {
+  white-space: nowrap;
+}
+
+#password-yes {
+  color: green;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+#password-no {
+  color: red;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+#generated-password {
+  color: #008;
+  font-weight: bold;
+}
+
+#buttons {
+  white-space: nowrap;
+  text-align: center;
+}
