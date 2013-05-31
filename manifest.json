@@ -2,7 +2,7 @@
   "name": "Password Generator",
   "version": "0.0",
   "manifest_version": 2,
-  "description": "Generate passwords for websites based on a ssecret password and their domains.",
+  "description": "Generate passwords for websites based on a secret password and their domains.",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
