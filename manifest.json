@@ -14,7 +14,8 @@
     "256": "icons/icon-256.png"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "background": {
     "scripts": ["js/background.js"],

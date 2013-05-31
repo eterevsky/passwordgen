@@ -1,8 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="options.css" rel="stylesheet">
+  <script src="js/options.js" type="text/javascript"></script>
 </head>
 <body>
-  Options.
+  <h1>Password Generator</h1>
+
+  <h2>General Settings</h2>
+  <input type="radio" name="password-storage" value="none">
+  Do not store master passwords<br>
+  <input type="radio" name="password-storage" value="none">
+  Store master passwords in memory<br>
+  <input type="radio" name="password-storage" value="none">
+  Store master passwords in permanent storage<br>
+
+  <h2>Profiles</h2>
+
+  <div id="profile-titles">
+    <span><a href="">Default</a> <a class="delete-profile" href="">×</a></span>
+    <span class="profile-selected"><a href="">Profile 1</a> <a class="delete-profile" href="">×</a></span>
+    <span><a href="">Test Profile</a> <a class="delete-profile" href="">×</a></span>
+    <a href="">+ Add profile</a>
+  </div>
+
+  <div id="profile-settings">
+    <div>
+      Profile name:
+      <input type="text" id="profile-name" size="20" value="Profile 1">
+    </div>
+
+    <h3>Hash function</h3>
+    <input type="radio" name="hash-function" value="md5" id="hash-function-md5">
+      <label for="hash-function-md5">MD5</label>
+    <input type="radio" name="hash-function" value="sha1" id="hash-function-sha1">
+      <label for="hash-function-sha1">SHA1</label>
+    <input type="radio" name="hash-function" value="sha256" id="hash-function-sha256">
+      <label for="hash-function-sha256">SHA256</label>
+    <input type="radio" name="hash-function" value="sha3" id="hash-function-sha3">
+      <label for="hash-function-sha3">SHA3</label>
+
+    <h3>Characters</h3>
+    <input type="checkbox" id="characters-upper"> <label for="characters-upper">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ</label><br>
+    <input type="checkbox" id="characters-lower"> <label for="characters-lower">
+      abcdefghijklmnopqrstuvwxyz</label><br>
+    <input type="checkbox" id="characters-digit"> <label for="characters-digit">
+      0123456789</label><br>
+    <input type="checkbox" id="characters-punctuation"> <label for="characters-punctuation">
+      `~!@#$%^&amp;*()_-+={}|[]\:";'&lt;&gt;?,./</label><br><br>
+
+    <input type="checkbox" id="all-character-types"> <label for="all-character-types">
+      Use all character types in each password</label><br><br>
+
+    <input type="text" id="characters" size="40">
+
+    <h3>Password length</h3>
+
+    <input type="range" id="length-range" min="4" max="30" value="8">
+    <input type="number" id="length-number" min="4" max="30" value="8">
+
 </body>
 </html>

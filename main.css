@@ -1,5 +1,7 @@
 body {
-  font-family: sans-serif;
+  color: rgb(48, 57, 66);
+  font-family: Ubuntu, Arial, sans-serif;
+  font-size: 14px;
 }
 
 .hidden {
@@ -20,7 +22,9 @@ body {
 }
 
 input[type="password"], input[type="text"] {
-  border: 1px solid #000;
+  border: 1px solid #777;
+  border-radius: 2px;
+  padding: 2px 3px 2px 3px;
 }
 
 #password-line {
