@@ -13,6 +13,13 @@
     "192": "icons/icon-192.png",
     "256": "icons/icon-256.png"
   },
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": true
+  },
   "browser_action": {
     "default_icon": {
       "19": "icons/icon-19.png",
@@ -22,5 +29,6 @@
     },
     "default_title": "Password Generator",
     "default_popup": "popup.html"
-  }
+  },
+  "options_page": "options.html"
 }
