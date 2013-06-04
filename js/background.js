@@ -1,64 +1,174 @@
-function log(s) {
-  console.log(s);
+/**
+ * @constructor
+ */
+function Profiles() {
+  /** @type {Array.<number>} */
+  this.ids_ = null;
+  /** @type {Object.<number, Object> */
+  this.data_ = null;
+  /** @type {number} */
+  this.lastUsed_ = 1;
+
+  chrome.storage.sync.get(
+      {'profile-ids': []}, this.onProfileIdsReceived_.bind(this));
+  chrome.storage.onChanged.addListener(this.onChanged_.bind(this));
 }
 
-var profiles = [1, 2, 3];
-var profileData = {
-  1: {'name': 'Default'},
-  2: {'name': 'Old'},
-  3: {'name': 'Test Profile'}
+/**
+ * @param {Object} items
+ */
+Profiles.prototype.onProfileIdsReceived_ = function(items) {
+  this.ids_ = items['profile-ids'];
+
+  if (this.ids_.length === 0) {
+    this.ids_ = [];
+    this.data_ = {};
+    this.add();
+  } else {
+    var ids = [];
+    for (var i = 0; i < this.ids_.length; i++) {
+      ids.push('profile-' + this.ids_[i]);
+    }
+    chrome.storage.sync.get(ids, this.onDataReceived_.bind(this));
+  }
 };
 
-function getProfiles() {
-  var profilesWithNames = [];
-  for (var i = 0; i < profiles.length; i++) {
-    var id = profiles[i];
-    var name = profileData[id]['name'];
-    profilesWithNames.push({'id': id, 'name': name});
+/**
+ * @param {Object} items
+ */
+Profiles.prototype.onDataReceived_ = function(items) {
+  this.data_ = {};
+  for (var key in items) {
+    var profile = items[key];
+    var id = profile['id'];
+    this.data_[id] = profile;
   }
-  return profilesWithNames;
-}
+};
 
-function getProfileName(id) {
-  return profileData[id]['name'];
-}
-
-function getLastUsedProfile() {
-  return 1;
-}
-
-function deleteProfile(id) {
-  profiles.splice(profiles.indexOf(id), 1);
-  delete profileData[id];
-}
-
-function newProfile(id, name) {
-  return {'id': id, 'name': name};
-}
-
-function addProfile() {
-  var id = profiles[profiles.length - 1] + 1;
-  var name;
-
-  var i;
-  for (i = 1;; i++) {
-    var found = false;
-    name = 'Profile ' + i;
-    for (var j = 0; j < profiles.length; j++) {
-      if (profileData[profiles[j]]['name'] === name) {
-        found = true;
-        break;
+/**
+ * @param {Object} items
+ */
+Profiles.prototype.onChanged_ = function(items) {
+  for (var key in items) {
+    if (key === 'profile-ids') {
+      this.ids_ = items['profile-ids'].newValue;
+    } else if (key === 'profile-last-used') {
+      this.lastUsed_ = items['profile-last-used'].newValue;
+    } else if (key.indexOf('profile-') === 0) {
+      var id = parseInt(key.substring(8), 10);
+      if (items[key].newValue) {
+        this.data_[id] = items[key].newValue;
+      } else {
+        delete this.data_[id];
       }
     }
-    if (!found)
-      break;
+  }
+};
+
+/**
+ * @param {number} id
+ */
+Profiles.prototype.store_ = function(id) {
+  var items = {};
+  items['profile-ids'] = this.ids_;
+  if (id in this.data_)
+    items['profile-' + id] = this.data_[id];
+  chrome.storage.sync.set(items);
+  if (!(id in this.data_))
+    chrome.storage.sync.remove('profile-' + id);
+};
+
+Profiles.prototype.storeLastUsed_ = function() {
+  chrome.storage.sync.set({'profile-last-used': this.lastUsed_})
+};
+
+/**
+ * @return {Array.<Object>}
+ */
+Profiles.prototype.getAll = function() {
+  var profs = [];
+  for (var i = 0; i < this.ids_.length; i++) {
+    profs.push(this.data_[this.ids_[i]]);
+  }
+  return profs;
+};
+
+/**
+ * @param {number} id
+ * @return {string}
+ */
+Profiles.prototype.getName = function(id) {
+  return this.data_[id]['name'];
+};
+
+/**
+ * @return {number}
+ */
+Profiles.prototype.getLastUsed = function() {
+  if (this.lastUsed_ in this.data_) {
+    return this.lastUsed_;
+  } else {
+    return this.ids_[0];
+  }
+}
+
+/**
+ * @param {number} id
+ */
+Profiles.prototype.updateLastUsed = function(id) {
+  if (id !== this.lastUsed_ && id in this.data_) {
+    this.lastUsed_ = id;
+    this.storeLastUsed_();
+  }
+}
+
+/**
+ * @param {number} id
+ */
+Profiles.prototype.deleteProfile = function(id) {
+  this.ids_.splice(this.ids_.indexOf(id), 1);
+  delete this.data_[id];
+  this.store_(id);
+  if (this.ids_.length === 0)
+    this.add();
+}
+
+/**
+ * @return {number}
+ */
+Profiles.prototype.add = function() {
+  var id, name;
+  var i;
+  if (this.ids_.length === 0) {
+    id = 1;
+    name = 'Default';
+    this.lastUsed_ = 1;
+  } else {
+    id = this.ids_[this.ids_.length - 1] + 1;
+    for (i = 1;; i++) {
+      var found = false;
+      name = 'Profile ' + i;
+      for (var key in this.data_) {
+        if (this.data_[key]['name'] === name) {
+          found = true;
+          break;
+        }
+      }
+      if (!found)
+        break;
+    }
   }
 
-  var profile = newProfile(id, name);
-  profiles.push(id);
-  profileData[id] = profile;
+  var profile = {'id': id, 'name': name};
+  this.ids_.push(id);
+  this.data_[id] = profile;
+  this.store_(id);
+  this.updateLastUsed(id);
   return id;
 }
+
+var profiles = new Profiles();
+
 
 var MOCK_PASSWORDS = {1: 'abc', 2: '12345678'};
 

@@ -20,7 +20,7 @@ function onBackgroundPage(bg) {
 }
 
 function setupProfiles() {
-  var profiles = background.getProfiles();
+  var profiles = background.profiles.getAll();
   var profilesBlock = document.getElementById('profile-block');
 
   for (var i = 0; i < profiles.length; i++) {
@@ -80,7 +80,7 @@ function domainFromURL(url) {
 
 function onActiveTabs(tabs) {
   if (tabs.length < 1) {
-    background.log('No active tabs!');
+    background.console.log('No active tabs!');
     return;
   }
   var url = tabs[0].url;

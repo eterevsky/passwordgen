@@ -1,18 +1,25 @@
-var background = null;
+/**
+ * @type {Profiles}
+ */
+var profiles = null;
+/**
+ * @type {number}
+ */
 var selectedProfileId = null;
 
 function init() {
   chrome.runtime.getBackgroundPage(onBackgroundPage);
+  document.getElementById('add-profile').addEventListener('click', addProfile);
 }
 
 function onBackgroundPage(bg) {
-  background = bg;
-  document.getElementById('add-profile').addEventListener('click', addProfile);
-  populateProfiles(background.getProfiles());
-  selectProfile(background.getLastUsedProfile());
+  profiles = bg.profiles;
+  populateProfiles();
+  selectProfile(profiles.getLastUsed());
 }
 
-function populateProfiles(profiles) {
+function populateProfiles() {
+  var profs = profiles.getAll();
   var profilesRow = document.getElementById('profile-titles');
   var addProfileButton = document.getElementById('add-profile');
 
@@ -27,9 +34,9 @@ function populateProfiles(profiles) {
     profilesRow.removeChild(toDelete[i]);
   }
 
-  for (var i = 0; i < profiles.length; i++) {
-    var profileId = profiles[i]['id'];
-    var profileName = profiles[i]['name'];
+  for (var i = 0; i < profs.length; i++) {
+    var profileId = profs[i]['id'];
+    var profileName = profs[i]['name'];
 
     var span = document.createElement('span');
     span.id = 'profile-' + profileId;
@@ -68,25 +75,24 @@ function selectProfile(profileId) {
  * @param {number} profileId
  */
 function deleteProfile(profileId) {
-  var name = background.getProfileName(profileId);
+  var name = profiles.getName(profileId);
 
   if (confirm('Delete the profile "' + name + '"?')) {
-    background.deleteProfile(profileId);
-    populateProfiles(background.getProfiles());
+    profiles.deleteProfile(profileId);
+    populateProfiles();
     if (profileId === selectedProfileId) {
-      selectProfile(background.getLastUsedProfile());
+      selectProfile(profiles.getLastUsed());
     } else {
       selectProfile(selectedProfileId);
     }
   }
 }
 
-
 function addProfile() {
-  var profileId = background.addProfile();
-  populateProfiles(background.getProfiles());
+  var profileId = profiles.add();
+  populateProfiles();
   selectProfile(profileId);
+  document.getElementById('profile-name').focus();
 }
-
 
 window.addEventListener('load', init);
