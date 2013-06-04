@@ -38,7 +38,7 @@ input[type="password"], input[type="text"] {
   margin-right: 20px;
 }
 
-#profile-titles span.profile-selected {
+#profile-titles span.selected-profile {
   background-color: white;
   opacity: 1;
   z-index: 3;
@@ -47,11 +47,12 @@ input[type="password"], input[type="text"] {
 #profile-titles a {
   color: rgb(48, 57, 66);
   text-decoration: none;
+  cursor: pointer;
 }
 
-#profile-titles .delete-profile {
+#profile-titles span a.delete-profile {
   color: #777;
-  cursor: inherit;
+  cursor: default;
   margin-left: 5px;
 }
 
@@ -59,7 +60,7 @@ input[type="password"], input[type="text"] {
   color: #777;
 }
 
-span.profile-selected a {
+#profile-titles span.selected-profile a {
   font-weight: bold;
   cursor: default;
 }
