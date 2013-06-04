@@ -33,7 +33,7 @@ function setupProfiles() {
     input.setAttribute('value', profile['id']);
     input.addEventListener('change', onProfileChange);
     if (i === 0) {
-      input.setAttribute('checked', 'checked');
+      input.checked = true;
     }
     div.appendChild(input);
     div.appendChild(document.createTextNode(profile['name']));

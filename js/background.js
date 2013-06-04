@@ -8,6 +8,8 @@ function Profiles() {
   this.data_ = null;
   /** @type {number} */
   this.lastUsed_ = 1;
+  /** @type {Object.<string, string>} */
+  this.passwords_ = {};
 
   chrome.storage.sync.get(
       {'profile-ids': []}, this.onProfileIdsReceived_.bind(this));
@@ -102,6 +104,14 @@ Profiles.prototype.getName = function(id) {
 };
 
 /**
+ * @param {number} id
+ * @return {Object}
+ */
+Profiles.prototype.get = function(id) {
+  return this.data_[id];
+};
+
+/**
  * @return {number}
  */
 Profiles.prototype.getLastUsed = function() {
@@ -159,13 +169,30 @@ Profiles.prototype.add = function() {
     }
   }
 
-  var profile = {'id': id, 'name': name};
+  var profile = {
+      'id': id,
+      'name': name,
+      'hash': 'sha256',
+      'custom': false,
+      'char-upper': true,
+      'char-lower': true,
+      'char-digits': true,
+      'char-symbols': true,
+      'char-mix': false,
+      'char-custom': '',
+      'length': 8
+  };
   this.ids_.push(id);
   this.data_[id] = profile;
   this.store_(id);
   this.updateLastUsed(id);
   return id;
 }
+
+Profiles.prototype.update = function(profile) {
+  this.data_[profile['id']] = profile;
+  this.store_(profile['id']);
+};
 
 var profiles = new Profiles();
 
