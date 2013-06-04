@@ -16,7 +16,7 @@ function init() {
 function onBackgroundPage(bg) {
   background = bg;
   setupProfiles();
-  chrome.tabs.query({'active': true}, onActiveTabs);
+  chrome.tabs.query({'active': true, 'currentWindow': true}, onActiveTabs);
 }
 
 function setupProfiles() {
