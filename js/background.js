@@ -1,3 +1,5 @@
+// Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
+
 /**
  * @constructor
  */
@@ -257,6 +259,8 @@ function generate(profileId, domain, password) {
 
   if (characters.length < 2)
     return '';
+
+  if (
 
   /** @type {function(string, string)} */
   var hashFunction;

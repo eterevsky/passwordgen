@@ -1,3 +1,5 @@
+// Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
+
 var background = null;
 var tab = null;
 var tabDomain = null;
