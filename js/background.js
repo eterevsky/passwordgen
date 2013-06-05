@@ -260,8 +260,6 @@ function generate(profileId, domain, password) {
   if (characters.length < 2)
     return '';
 
-  if (
-
   /** @type {function(string, string)} */
   var hashFunction;
   switch (profile['hash']) {
