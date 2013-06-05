@@ -17,8 +17,8 @@ function init() {
   chrome.runtime.getBackgroundPage(onBackgroundPage);
   document.getElementById('add-profile').addEventListener('click', addProfile);
   document.getElementById('profile-name').addEventListener('input', nameChange);
-  document.getElementById('hash-function-sha3').addEventListener(
-      'click', hashChange);
+//  document.getElementById('hash-function-sha3').addEventListener(
+//      'click', hashChange);
   document.getElementById('hash-function-sha256').addEventListener(
       'click', hashChange);
   document.getElementById('hash-function-sha1').addEventListener(
@@ -92,8 +92,8 @@ function gatherOptions() {
   var profile = {'id': selectedProfileId};
   profile['name'] = document.getElementById('profile-name').value;
 
-  if (document.getElementById('hash-function-sha3').checked)
-    profile['hash'] ='sha3';
+//  if (document.getElementById('hash-function-sha3').checked)
+//    profile['hash'] ='sha3';
   if (document.getElementById('hash-function-sha256').checked)
     profile['hash'] ='sha256';
   if (document.getElementById('hash-function-sha1').checked)
