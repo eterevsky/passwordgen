@@ -44,8 +44,6 @@ function setupProfiles() {
   if (profiles.length === 1) {
     profilesBlock.classList.add('hidden');
   }
-
-  onProfileChange();
 }
 
 function getProfile() {
@@ -64,9 +62,10 @@ function getProfile() {
 
 function onProfileChange() {
   var profileId = getProfile();
-  var password = background.profile.getPassword(profileId);
+  var password = background.profiles.getPassword(profileId) || '';
   document.getElementById('password').value = password;
   generatePassword();
+  background.profiles.updateLastUsed(profileId);
 }
 
 function domainFromURL(url) {
@@ -81,19 +80,21 @@ function domainFromURL(url) {
 
 function onActiveTabs(tabs) {
   if (tabs.length < 1) {
-    background.console.log('No active tabs!');
+    background.console.error('No active tabs!');
     return;
   }
   var url = tabs[0].url;
   if (!url) return;
   tab = tabs[0];
   tabDomain = domainFromURL(url);
-  getDomainSettings(tabDomain, function(profileId, domain) {
+  background.getDomainSettings(tabDomain, function(profileId, domain) {
     document.getElementById('domain').value = domain;
     document.getElementById('profile-' + profileId).checked = true;
+    onProfileChange();
     if (domain != tabDomain) {
-      getDomainSettings(domain, function(profileId1) {
+      background.getDomainSettings(domain, function(profileId1) {
         document.getElementById('profile-' + profileId1).checked = true;
+        onProfileChange();
       });
     }
   });
@@ -110,7 +111,6 @@ function generatePassword() {
     case 0:
       yes.classList.add('hidden');
       no.classList.remove('hidden');
-      updatePassword('');
       return;
 
     case 1:
@@ -127,7 +127,7 @@ function generatePassword() {
   var domain = document.getElementById('domain').value;
 
   document.getElementById('generated-password').value = background.generate(
-      profileId, domain, password, updatePassword);
+      profileId, domain, password);
 }
 
 function insert() {
@@ -145,7 +145,8 @@ function insert() {
   });
 
   var domain = document.getElementById('domain').value;
-  background.updateDomainProfile(domain, getProfile());
+  var profileId = getProfile();
+  background.updateDomainProfile(domain, profileId);
   background.updateDomainSubstitute(tabDomain, domain);
 }
 
@@ -154,7 +155,8 @@ function clipboard() {
   document.execCommand('copy');
 
   var domain = document.getElementById('domain').value;
-  background.updateDomainProfile(domain, getProfile());
+  var profileId = getProfile();
+  background.updateDomainProfile(domain, profileId);
 }
 
 function options() {

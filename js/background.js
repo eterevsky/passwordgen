@@ -212,6 +212,11 @@ Profiles.prototype.setPassword = function(id, password) {
   this.passwords_[id] = password;
 };
 
+/**
+ * @param {number} id
+ * @param {string} password
+ * @returns {number} 0 — wrong, 1 — right, 2­ — unknown.
+ */
 Profiles.prototype.verifyPassword = function(id, password) {
   return 2;
 };
@@ -233,8 +238,8 @@ function updateDomainSubstitute(domain, substitute) {
 
 function getDomainSettings(domain, callback) {
   var request = {};
-  request['domain-profile-' + domain] = domain;
-  request['domain-substitute-' + domain] = profile.getLastUsed();
+  request['domain-profile-' + domain] = profiles.getLastUsed();
+  request['domain-substitute-' + domain] = domain;
   chrome.storage.sync.get(request, function(items) {
     callback(items['domain-profile-' + domain],
              items['domain-substitute-' + domain])
@@ -242,5 +247,6 @@ function getDomainSettings(domain, callback) {
 }
 
 function generate(profileId, domain, password, callback) {
-  callback(profileId + domain + password);
+  profiles.setPassword(profileId, password);
+  return profileId + '/' + domain + '/' + password;
 }
