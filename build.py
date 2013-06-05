@@ -9,7 +9,7 @@ import sys
 import urllib.parse
 import urllib.request
 
-APP_NAME = 'PasswordGen'
+APP_NAME = 'Password Generator'
 IS_APP = False
 
 BASE_DIR = os.path.dirname(sys.argv[0])
