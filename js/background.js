@@ -179,7 +179,10 @@ Profiles.prototype.add = function() {
       'char-digits': true,
       'char-symbols': true,
       'char-mix': false,
-      'char-custom': '',
+      'char-custom': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+                     'abcdefghijklmnopqrstuvwxyz' +
+                     '0123456789' +
+                     '`~!@#$%^&*()_-+={}|[]\\:";\'<>?,./',
       'length': 8
   };
   this.ids_.push(id);
@@ -246,7 +249,31 @@ function getDomainSettings(domain, callback) {
   });
 }
 
-function generate(profileId, domain, password, callback) {
+function generate(profileId, domain, password) {
   profiles.setPassword(profileId, password);
-  return profileId + '/' + domain + '/' + password;
+  var profile = profiles.get(profileId);
+  var characters = profile['char-custom']
+  var length = profile['length'];
+
+  if (characters.length < 2)
+    return '';
+
+  /** @type {function(string, string)} */
+  var hashFunction;
+  switch (profile['hash']) {
+    case 'md5': hashFunction = any_md5; break;
+    case 'sha1': hashFunction = any_sha1; break;
+    case 'sha256': hashFunction = any_sha256; break;
+    default:
+      console.error('Hash algorithm not supported:', profile['hash']);
+      return '';
+  }
+
+  var generatedPassword = ''
+  for (var count = 0; generatedPassword.length < length; count++) {
+    var data = count ? password + '\n' + count + domain : password + domain;
+    generatedPassword += hashFunction(data, characters);
+  }
+
+  return generatedPassword.substring(0, length);
 }

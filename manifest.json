@@ -18,7 +18,12 @@
     "storage"
   ],
   "background": {
-    "scripts": ["js/background.js"],
+    "scripts": [
+      "js/background.js",
+      "jshash/md5.js",
+      "jshash/sha1.js",
+      "jshash/sha256.js"
+    ],
     "persistent": true
   },
   "browser_action": {
