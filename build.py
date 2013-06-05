@@ -217,14 +217,13 @@ def compile_js(out_path, js_files, level, externs):
 
 def main():
   parse_command_line()
-  print(debug_build)
 
   version = get_version()
 
   dir_name = APP_NAME + '-' + version
   if debug_build:
     dir_name += '-dbg'
-  print(dir_name)
+  print('Compiling', dir_name)
   out_dir = os.path.join(BUILD_DIR, dir_name)
   archive_path = out_dir + '.zip'
   delete(out_dir, archive_path)
