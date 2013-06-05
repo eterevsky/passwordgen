@@ -189,34 +189,58 @@ Profiles.prototype.add = function() {
   return id;
 }
 
+/**
+ * @param {Object} profile
+ */
 Profiles.prototype.update = function(profile) {
   this.data_[profile['id']] = profile;
   this.store_(profile['id']);
 };
 
+/**
+ * @param {number} id
+ */
+Profiles.prototype.getPassword = function(id) {
+  return this.passwords_[id];
+};
+
+/**
+ * @param {number} id
+ * @param {string} password
+ */
+Profiles.prototype.setPassword = function(id, password) {
+  this.passwords_[id] = password;
+};
+
+Profiles.prototype.verifyPassword = function(id, password) {
+  return 2;
+};
+
 var profiles = new Profiles();
 
 
-var MOCK_PASSWORDS = {1: 'abc', 2: '12345678'};
-
-function getProfilePassword(profileId) {
-  return MOCK_PASSWORDS[profileId] || '';
+function updateDomainProfile(domain, profileId) {
+  var item = {};
+  item['domain-profile-' + domain] = profileId;
+  chrome.storage.sync.set(item);
 }
 
-function verifyPassword(profileId, password) {
-  if (profileId in MOCK_PASSWORDS) {
-    return password === MOCK_PASSWORDS[profileId] ? 1 : 0;
-  } else {
-    return 2;
-  }
+function updateDomainSubstitute(domain, substitute) {
+  var item = {};
+  item['domain-substitute-' + domain] = substitute;
+  chrome.storage.sync.set(item);
+}
+
+function getDomainSettings(domain, callback) {
+  var request = {};
+  request['domain-profile-' + domain] = domain;
+  request['domain-substitute-' + domain] = profile.getLastUsed();
+  chrome.storage.sync.get(request, function(items) {
+    callback(items['domain-profile-' + domain],
+             items['domain-substitute-' + domain])
+  });
 }
 
 function generate(profileId, domain, password, callback) {
   callback(profileId + domain + password);
-}
-
-function saveDomainProfile(domain, profileId) {
-}
-
-function saveDomainSubstitute(domain, otherDomain) {
 }

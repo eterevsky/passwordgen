@@ -31,6 +31,7 @@ function setupProfiles() {
     input.setAttribute('type', 'radio');
     input.setAttribute('name', 'profile');
     input.setAttribute('value', profile['id']);
+    input.id = 'profile-' + profile['id'];
     input.addEventListener('change', onProfileChange);
     if (i === 0) {
       input.checked = true;
@@ -63,7 +64,7 @@ function getProfile() {
 
 function onProfileChange() {
   var profileId = getProfile();
-  var password = background.getProfilePassword(profileId);
+  var password = background.profile.getPassword(profileId);
   document.getElementById('password').value = password;
   generatePassword();
 }
@@ -87,13 +88,21 @@ function onActiveTabs(tabs) {
   if (!url) return;
   tab = tabs[0];
   tabDomain = domainFromURL(url);
-  document.getElementById('domain').value = tabDomain;
+  getDomainSettings(tabDomain, function(profileId, domain) {
+    document.getElementById('domain').value = domain;
+    document.getElementById('profile-' + profileId).checked = true;
+    if (domain != tabDomain) {
+      getDomainSettings(domain, function(profileId1) {
+        document.getElementById('profile-' + profileId1).checked = true;
+      });
+    }
+  });
 }
 
 function generatePassword() {
   var password = document.getElementById('password').value;
   var profileId = getProfile();
-  var passwordStatus = background.verifyPassword(profileId, password);
+  var passwordStatus = background.profiles.verifyPassword(profileId, password);
 
   var yes = document.getElementById('password-yes');
   var no = document.getElementById('password-no');
@@ -117,11 +126,8 @@ function generatePassword() {
 
   var domain = document.getElementById('domain').value;
 
-  background.generate(profileId, domain, password, updatePassword);
-}
-
-function updatePassword(generatedPassword) {
-  document.getElementById('generated-password').value = generatedPassword;
+  document.getElementById('generated-password').value = background.generate(
+      profileId, domain, password, updatePassword);
 }
 
 function insert() {
@@ -138,24 +144,17 @@ function insert() {
             '}'
   });
 
-  background.saveDomainProfile(tabDomain, getProfile());
-
   var domain = document.getElementById('domain').value;
-  if (domain !== tabDomain) {
-    background.saveDomainSubstitute(tabDomain, domain);
-  }
+  background.updateDomainProfile(domain, getProfile());
+  background.updateDomainSubstitute(tabDomain, domain);
 }
 
 function clipboard() {
   document.getElementById('generated-password').select();
   document.execCommand('copy');
 
-  background.saveDomainProfile(tabDomain, getProfile());
-
   var domain = document.getElementById('domain').value;
-  if (domain !== tabDomain) {
-    background.saveDomainSubstitute(tabDomain, domain);
-  }
+  background.updateDomainProfile(domain, getProfile());
 }
 
 function options() {
