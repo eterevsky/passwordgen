@@ -70,14 +70,31 @@ function onProfileChange() {
   background.profiles.updateLastUsed(profileId);
 }
 
+// May use a complete list, but it's to long and it doesn't pay off.
+var EFFECTIVE_TLD = ['co.uk', 'co.jp'];
+
 function domainFromURL(url) {
   var fullDomain = url.match(/^\w+:\/\/((?:\w[-\w\d]*\.)*\w[-\w\d]*)\/.*/)[1];
   if (!fullDomain)
     return null;
-  if (fullDomain.substring(0, 4) === 'www.') {
-    fullDomain = fullDomain.substring(4);
+
+  var parts = fullDomain.split('.');
+  if (parts.length <= 2)
+    return fullDomain;
+  var third = false;
+  for (var i = 0; i < EFFECTIVE_TLD.length; i++) {
+    var tld = EFFECTIVE_TLD[i];
+    if (fullDomain.indexOf(tld, fullDomain.length - tld.length) != -1) {
+      third = true;
+      break;
+    }
   }
-  return fullDomain;
+
+  if (third) {
+    return parts.slice(parts.length - 3).join('.');
+  } else {
+    return parts.slice(parts.length - 2).join('.');
+  }
 }
 
 function onActiveTabs(tabs) {
