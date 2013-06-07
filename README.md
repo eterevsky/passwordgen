@@ -3,6 +3,8 @@ Password Generator
 
 Chrome extension that generates passwords based on a master password and current domain. Partly (but not completely) compatible to [PasswordMaker](http://passwordmaker.org).
 
+Install extension [from Chrome WebStore](https://chrome.google.com/webstore/detail/password-generator/klfojgipmkdgfmikjfdhhkjlfeboaoij).
+
 Screenshots
 -----------
 
