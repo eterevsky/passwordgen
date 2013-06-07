@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+#
+# Copyright (c) 2013 Oleg Eterevsky. Released under the MIT license.
 
 import json
 import os
