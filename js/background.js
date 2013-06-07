@@ -12,9 +12,14 @@ function Profiles() {
   this.lastUsed_ = 1;
   /** @type {Object.<string, string>} */
   this.passwords_ = {};
+  /** @type {string} */
+  this.passwordStorage_ = 'memory';
 
   chrome.storage.sync.get(
       {'profile-ids': []}, this.onProfileIdsReceived_.bind(this));
+  chrome.storage.sync.get(
+      {'password-storage': 'memory'},
+      this.onPasswordStorageReceived_.bind(this));
   chrome.storage.onChanged.addListener(this.onChanged_.bind(this));
 }
 
@@ -32,6 +37,7 @@ Profiles.prototype.onProfileIdsReceived_ = function(items) {
     var ids = [];
     for (var i = 0; i < this.ids_.length; i++) {
       ids.push('profile-' + this.ids_[i]);
+      ids.push('password-' + this.ids_[i]);
     }
     chrome.storage.sync.get(ids, this.onDataReceived_.bind(this));
   }
@@ -40,12 +46,25 @@ Profiles.prototype.onProfileIdsReceived_ = function(items) {
 /**
  * @param {Object} items
  */
+Profiles.prototype.onPasswordStorageReceived_ = function(items) {
+  this.passwordStorage_ = items['password-storage'];
+};
+
+/**
+ * @param {Object} items
+ */
 Profiles.prototype.onDataReceived_ = function(items) {
+  var id;
   this.data_ = {};
   for (var key in items) {
-    var profile = items[key];
-    var id = profile['id'];
-    this.data_[id] = profile;
+    if (key.indexOf('profile-') === 0) {
+      var profile = items[key];
+      id = profile['id'];
+      this.data_[id] = profile;
+    } else if (key.indexOf('password-') === 0) {
+      id = parseInt(key.substring(9), 10);
+      this.passwords_[id] = items[key];
+    }
   }
 };
 
@@ -53,18 +72,36 @@ Profiles.prototype.onDataReceived_ = function(items) {
  * @param {Object} items
  */
 Profiles.prototype.onChanged_ = function(items) {
+  var id;
   for (var key in items) {
-    if (key === 'profile-ids') {
-      this.ids_ = items['profile-ids'].newValue;
-    } else if (key === 'profile-last-used') {
-      this.lastUsed_ = items['profile-last-used'].newValue;
-    } else if (key.indexOf('profile-') === 0) {
-      var id = parseInt(key.substring(8), 10);
-      if (items[key].newValue) {
-        this.data_[id] = items[key].newValue;
-      } else {
-        delete this.data_[id];
-      }
+    var value = items[key].newValue;
+    switch (key) {
+      case 'profile-ids':
+        this.ids_ = value;
+        break;
+
+      case 'profile-last-used':
+        this.lastUsed_ = value;
+        break;
+
+      case 'password-storage':
+        this.passwordStorage_ = value;
+        if (value === 'none')
+          this.passwords_ = {};
+        break;
+
+      default:
+        if (key.indexOf('profile-') === 0) {
+          id = parseInt(key.substring(8), 10);
+          if (value) {
+            this.data_[id] = value;
+          } else {
+            delete this.data_[id];
+          }
+        } else if (key.indexOf('password-') === 0) {
+          id = parseInt(key.substring(9), 10);
+          this.passwords_[id] = value;
+        }
     }
   }
 };
@@ -206,7 +243,11 @@ Profiles.prototype.update = function(profile) {
  * @param {number} id
  */
 Profiles.prototype.getPassword = function(id) {
-  return this.passwords_[id];
+  if (this.passwordStorage !== 'none') {
+    return this.passwords_[id];
+  } else {
+    return '';
+  }
 };
 
 /**
@@ -214,7 +255,21 @@ Profiles.prototype.getPassword = function(id) {
  * @param {string} password
  */
 Profiles.prototype.setPassword = function(id, password) {
-  this.passwords_[id] = password;
+  switch (this.passwordStorage_) {
+    case 'none':
+      break;
+
+    case 'memory':
+      this.passwords_[id] = password;
+      break;
+
+    case 'permanent':
+      this.passwords_[id] = password;
+      var storageItem = {};
+      storageItem['password-' + id] = password;
+      chrome.storage.sync.set(storageItem);
+      break;
+  }
 };
 
 /**
@@ -224,6 +279,33 @@ Profiles.prototype.setPassword = function(id, password) {
  */
 Profiles.prototype.verifyPassword = function(id, password) {
   return 2;
+};
+
+/**
+ * @return {string} none|memory|permanent
+ */
+Profiles.prototype.getPasswordStorage = function() {
+  console.log('getPasswordStorage', this.passwordStorage_);
+  return this.passwordStorage_;
+};
+
+/**
+ * @param {string} storage none|memory|permanent
+ */
+Profiles.prototype.setPasswordStorage = function(storage) {
+  console.log('setPasswordStorage', storage);
+  this.passwordStorage_ = storage;
+  if (storage === 'none') {
+    this.passwords_ = {};
+  }
+  chrome.storage.sync.set({'password-storage': storage});
+  if (storage !== 'permanent') {
+    var ids = [];
+    for (var i = 0; i < this.ids_.length; i++) {
+      ids.push('password-' + this.ids_[i]);
+    }
+    chrome.storage.sync.remove(ids);
+  }
 };
 
 var profiles = new Profiles();

@@ -41,12 +41,23 @@ function init() {
       'change', rangeChange);
   document.getElementById('length-number').addEventListener(
       'change', lengthChange);
+
+  var passwordStorage = document.getElementsByName('password-storage');
+  for (var i = 0; i < passwordStorage.length; i++) {
+    passwordStorage[i].addEventListener('click', passwordStorageChange);
+  }
 }
 
 function onBackgroundPage(bg) {
   profiles = bg.profiles;
+  setPasswordStorage();
   populateProfiles();
   selectProfile(profiles.getLastUsed());
+}
+
+function setPasswordStorage() {
+  var storage = profiles.getPasswordStorage();
+  document.getElementById('password-storage-' + storage).checked = true;
 }
 
 function populateProfiles() {
@@ -112,7 +123,25 @@ function gatherOptions() {
   profile['char-custom'] = document.getElementById('characters').value;
   profile['length'] = document.getElementById('length-number').value;
 
-  return profile
+  return profile;
+}
+
+function passwordStorageChange() {
+  var passwordStorage = null;
+  var radioButtons = document.getElementsByName('password-storage');
+  for (var i = 0; i < radioButtons.length; i++) {
+    if (radioButtons[i].checked) {
+      passwordStorage = radioButtons[i].value;
+      break;
+    }
+  }
+
+  if (!passwordStorage) {
+    console.error('No password storage option chosen. This should not happen.');
+    return;
+  }
+
+  profiles.setPasswordStorage(passwordStorage);
 }
 
 function nameChange() {
