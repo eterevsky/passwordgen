@@ -32,6 +32,8 @@ FILES = [
   'icons/icon-192.png',
   'icons/icon-256.png',
   'js/background.js',
+  'js/biguint.js',
+  'js/mstrings.js',
   'js/main.js',
   'js/options.js',
   'jshash/md5.js',
