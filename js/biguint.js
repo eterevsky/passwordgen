@@ -5,7 +5,7 @@
  * @param {Array.<number>} digits Prepared digits array.
  * Long unsigned integers represented for simplicity as byte arrays. 0 byte is
  * the least significant.
- * 
+ *
  * This constructor should be called mainly from other static functions. Outside
  * code should use fromInt(), fromRawStr and other functions to create BigUInt
  * instance.
@@ -26,6 +26,21 @@ BigUInt.prototype.iszero = function() {
   }
 
   return true;
+};
+
+/**
+ * @return {number}
+ */
+BigUInt.prototype.toNumber = function() {
+  var num = 0;
+  var mult = 1;
+
+  for (var i = 0; i < this.digits_.length; i++) {
+    num += this.digits_[i] * mult;
+    mult *= 256;
+  }
+
+  return num;
 };
 
 /**
@@ -63,7 +78,7 @@ BigUInt.fromRawStr = function(rstr) {
 BigUInt.shr = function(a, n) {
   if (n % 8)
     throw "Doesn't work for n not divisible by 8."
-  
+
   var digits = a.digits_.slice(n / 8, a.digits_.length);
   return new BigUInt(digits);
 };

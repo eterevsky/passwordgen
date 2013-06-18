@@ -1,24 +1,64 @@
 // Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
 
+var BigUInt = require('./biguint').BigUInt;
+
 /**
  * @constructor
  */
-function MultiStrings() {
+function MStrings() {
+  this.cache_ = [];
 }
 
 /**
  * @param {number} length
  * @param {Array.<number>} sets Number of elements in each set.
- * @param {Array.<number>} setsInPrefix Indexes of sets that already appeared
- *     in the prefix.
+ * @param {Array.<number>} opt_prefix Indexes of sets that already
+ *     appeared in the prefix.
  * @return {BigUInt}
+ *
+ * May reorder the elements in opt_prefix.
  */
-MultiStrings.prototype.count_ = function(length, sets, setsInPrefix) {
+MStrings.prototype.count = function(length, sets, opt_prefix) {
+  if (!opt_prefix)
+    opt_prefix = [];
+
+  if (length + opt_prefix.length < sets.length)
+    return BigUInt.ZERO;
+
+  if (length === 0 && opt_prefix.length === sets.length)
+    return BigUInt.fromInt(1);
+
+  var prefix = opt_prefix.sort();
+  var keyArr = [length, sets.length];
+  keyArr = keyArr.concat(sets, prefix);
+  var key = keyArr.join(',');
+
+  if (key in this.cache_)
+    return this.cache_[key];
+
+  var count = BigUInt.ZERO;
+  for (var i = 0; i < sets.length; i++) {
+    var appearInPrefix = (prefix.indexOf(i) != -1);
+    if (!appearInPrefix)
+      prefix.push(i);
+
+
+    count = BigUInt.add(
+        count, BigUInt.mul(BigUInt.fromInt(sets[i]),
+                           this.count(length - 1, sets, prefix)));
+
+    if (!appearInPrefix)
+      prefix.splice(prefix.indexOf(i), 1);
+  }
+
+  this.cache_[key] = count;
+
+  return count;
 };
 
 /**
  * @param {string} data Raw string.
- * @param {number} length The length of the 
+ * @param {number} length The length of the
  * @param {Array.<string>} sets Mutually exclusive sets of symbols.
  *
  * @return {string} For each position the index of set and the
@@ -29,21 +69,21 @@ MultiStrings.prototype.count_ = function(length, sets, setsInPrefix) {
  * of bits in data). The resulting strings are ordered lexicographically with
  * respect to the set number and the order of symbols a the set.
  */
-MultiStrings.prototype.encode = function(data, length, sets) {
+MStrings.prototype.encode = function(data, length, sets) {
   var i, iset, ichar;
 
   var setLengths = [];
   for (i = 0; i < sets.length; i++)
     setLengths.push(sets[i].length);
 
-  var total = this.count_(length, setLengths, []);
+  var total = this.count(length, setLengths);
   var dataNum = BigUInt.fromRawStr(data);
-  var index = BigUInt.shr(BigUInt.mul(total, dataNum), data.length * 8));
+  var index = BigUInt.shr(BigUInt.mul(total, dataNum), data.length * 8);
 
   var res = '';
   var setsInPrefix = [];
   while (length > 0) {
-    var sum = BinUInt.fromInt(0);
+    var sum = BigUInt.ZERO;
     var found = false;
     for (iset = 0; iset < sets.length; iset++) {
       // Taking the next character from set #iset.
@@ -54,7 +94,7 @@ MultiStrings.prototype.encode = function(data, length, sets) {
 
       // The number of suffixes of length - 1 for each single letter from set
       // #iset
-      var nsuffixes = this.count_(length - 1, setLengths, setsInPrefix);
+      var nsuffixes = this.count(length - 1, setLengths, setsInPrefix);
 
       for (ichar = 0; ichar < sets[iset].length; ichar++) {
         var newSum = BigUInt.add(sum, nsuffixes);
@@ -70,18 +110,20 @@ MultiStrings.prototype.encode = function(data, length, sets) {
         break;
       }
 
-      if (!appearInPrefix)
-        setsInPrefix.pop();
+      if (!appearInPrefix) {
+        setsInPrefix.splice(setsInPrefix.indexOf(iset), 1);
+      }
     }
 
     res += sets[iset][ichar];
     index = BigUInt.sub(index, sum);
+    length--;
   }
 
   return res;
 };
 
-var multiStrings = new MultiStrings();
+MStrings.instance = new MStrings();
 
 
 /**
@@ -95,6 +137,8 @@ var multiStrings = new MultiStrings();
  * roughly the same probability provided the input strings are also distributed
  * uniformly and are long enough.
  */
-function rstrToMultiStr(data, length, sets) {
-  return multiStrings.encode(data, length, sets);
+function rstrToMStr(data, length, sets) {
+  return MStrings.instance.encode(data, length, sets);
 }
+
+exports.MStrings = MStrings;

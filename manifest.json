@@ -22,6 +22,8 @@
   "background": {
     "scripts": [
       "js/background.js",
+      "js/biguint.js",
+      "js/mstrings.js",
       "jshash/md5.js",
       "jshash/sha1.js",
       "jshash/sha256.js"
