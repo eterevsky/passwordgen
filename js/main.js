@@ -71,7 +71,7 @@ function onProfileChange() {
 }
 
 // May use a complete list, but it's to long and it doesn't pay off.
-var EFFECTIVE_TLD = ['co.uk', 'co.jp'];
+var EFFECTIVE_TLD = ['com.au', 'co.uk', 'co.jp'];
 
 function domainFromURL(url) {
   var fullDomain = url.match(/^\w+:\/\/((?:\w[-\w\d]*\.)*\w[-\w\d]*)\/.*/)[1];
