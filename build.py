@@ -17,9 +17,7 @@ def build(source_dir, base_build_path=None):
   app_builder.add_html_file('popup.html')
   app_builder.add_html_file('options.html')
 
-  build_dir = app_builder.build()
-  build_archive = util.create_archive(build_dir)
-  return build_dir, build_archive
+  return app_builder.build()
 
 
 if __name__ == '__main__':
