@@ -5,7 +5,7 @@
   "description": "Generate passwords for websites based on a secret password and their domains.",
   "icons": {
     "16": "icons/icon-16.png",
-    "18": "icons/icon-18.png",
+    "19": "icons/icon-19.png",
     "32": "icons/icon-32.png",
     "38": "icons/icon-38.png",
     "48": "icons/icon-48.png",
