@@ -10,8 +10,11 @@ FILES = ['main.css', 'options.css']
 def dist(source_dir : builder.File, base_build_path, debug=False):
   """Create a distribution in a directory and an archive."""
   _, short_name = chrome_app.get_name_from_manifest(source_dir)
+  suffixes = []
+  if debug:
+    suffixes.append('dbg')
   build_path = util.get_build_path_with_version(source_dir, base_build_path,
-                                                short_name)
+                                                short_name, suffixes)
 
   app_builder = chrome_app.Builder(source_dir, build_path)
   app_builder.add_static_files(FILES)
