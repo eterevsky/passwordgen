@@ -11,6 +11,7 @@ FILES = ['main.css', 'options.css']
 
 
 def do_compile(source_dir, app_builder):
+  """Compile the javascript files in background page and HTMLs."""
   compiler = js.get_compiler()
   if compiler.name == 'closure':
     compiler.compilation_level = 'ADVANCED_OPTIMIZATIONS'
@@ -39,6 +40,7 @@ def dist(source_dir : File, base_build_path, compile_js=False):
                                                 short_name)
   app_builder = chrome_app.Builder(source_dir, build_path,
                                    add_js=(not compile_js))
+  app_builder.set_version(util.get_version_from_git(source_dir))
   app_builder.add_static_files(FILES)
 
   if compile_js:
