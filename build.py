@@ -7,7 +7,7 @@ import builder.html as html
 import builder.js as js
 import builder.util as util
 
-FILES = ['main.css', 'options.css']
+FILES = ['css/main.css', 'css/options.css']
 
 
 def do_compile(source_dir, app_builder):
