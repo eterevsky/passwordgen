@@ -36,8 +36,8 @@ def do_compile(source_dir, app_builder):
 def dist(source_dir : File, base_build_path, compile_js=False):
   """Create a distribution in a directory and an archive."""
   _, short_name = chrome_app.get_name_from_manifest(source_dir)
-  build_path = util.get_build_path_with_version(source_dir, base_build_path,
-                                                short_name)
+  build_path = util.get_build_path_with_version(
+      source_dir, base_build_path, short_name, default_branch='gh-pages')
   app_builder = chrome_app.Builder(source_dir, build_path,
                                    add_js=(not compile_js))
   app_builder.set_version(util.get_version_from_git(source_dir))
