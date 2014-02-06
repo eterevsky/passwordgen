@@ -23,11 +23,11 @@ Screenshots
 
 Here's the popup used to generate and insert the password into the fields on the page:
 
-![Popup screenshot](screenshot1.png)
+![Popup screenshot](images/screenshot1.png)
 
 And here's the extension options page:
 
-![Options page screenshot](screenshot2.png)
+![Options page screenshot](images/screenshot2.png)
 
 <a name="pm">
 Differences from PasswordMaker
