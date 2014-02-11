@@ -1,0 +1,8 @@
+.option-title {
+  display: inline-block;
+  width: 50%;
+}
+
+#password-line {
+  display: inline-block;
+}
