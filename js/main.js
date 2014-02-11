@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
+// Copyright (c) 2014 Oleg Eterevsky. Licensed under the MIT license.
 
 var background = null;
 var tab = null;

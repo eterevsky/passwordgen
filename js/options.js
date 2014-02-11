@@ -14,6 +14,8 @@ var selectedProfileId = null;
 var custom = false;
 
 function init() {
+  hideWebsiteMenu();
+
   chrome.runtime.getBackgroundPage(onBackgroundPage);
   document.getElementById('add-profile').addEventListener('click', addProfile);
   document.getElementById('profile-name').addEventListener('input', nameChange);
@@ -45,6 +47,15 @@ function init() {
   var passwordStorage = document.getElementsByName('password-storage');
   for (var i = 0; i < passwordStorage.length; i++) {
     passwordStorage[i].addEventListener('click', passwordStorageChange);
+  }
+}
+
+function hideWebsiteMenu() {
+  if (chrome && chrome.extension) {
+    var menu = document.getElementsByClassName('menu');
+    for (var i = 0; i < menu.length; i++) {
+      menu[i].classList.add('hidden');
+    }
   }
 }
 
