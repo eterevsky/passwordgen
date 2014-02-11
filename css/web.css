@@ -3,10 +3,6 @@
   margin: 0px auto;
 }
 
-#content.narrow-content {
-  max-width: 400px;
-}
-
 h1 {
   text-align: center;
 }
@@ -39,10 +35,8 @@ h1 {
   color: white;
 }
 
-.options-block {
+#generate-form {
   font-size: 120%;
-}
-
-button {
-  font-size: 120%;
+  max-width: 400px;
+  margin: 0px auto;
 }
