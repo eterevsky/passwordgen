@@ -116,10 +116,19 @@ h3 {
   z-index: 2;
 }
 
+.help {
+  color: #777;
+  font-style: italic;
+  font-size: 90%;
+  margin: 0;
+}
+
 #characters {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  font-family: monospace;
+  resize: none;
   width: 100%;
 }
 

@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/web.css">
+  <link rel="stylesheet" media="(max-width: 400px)" href="css/narrow.css">
   <script src="js/options.js" type="text/javascript"></script>
 </head>
 <body>
@@ -20,13 +21,13 @@
 
     <input type="radio" name="password-storage" id="password-storage-none"
            value="none">
-    Do not store master passwords<br>
+    Do not store the master password<br>
     <input type="radio" name="password-storage" id="password-storage-memory"
            value="memory" checked="checked">
-    Store master passwords in memory<br>
+    Store the master password in memory<br>
     <input type="radio" name="password-storage" id="password-storage-permanent"
            value="permanent">
-    Store master passwords in permanent storage<br>
+    Store the master password in permanent storage<br>
 
     <h2>Profiles</h2>
 
@@ -61,7 +62,9 @@
       <input type="checkbox" id="characters-mix"> <label for="all-character-types">
         Use all selected character types in each password</label><br><br>
 
-      <input type="text" id="characters">
+      <p class="help">Edit this textbox for custom set or order of characters,
+      used in passwords:</p>
+      <textarea id="characters"></textarea>
 
       <h3>Password length</h3>
 
