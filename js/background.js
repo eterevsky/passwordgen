@@ -339,8 +339,8 @@ var SYMBOL_SETS = {
   'upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   'lower': 'abcdefghijklmnopqrstuvwxyz',
   'digits': '0123456789',
-  'symbols': '`~!@#$%^&*()_-+={}|[]\\:";\'<>?,./',
- }
+  'symbols': '`~!@#$%^&*()_-+={}|[]\\:";\'<>?,./'
+};
 
 /**
  * @param {string} s

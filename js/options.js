@@ -1,16 +1,10 @@
 // Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
 
-/**
- * @type {Profiles}
- */
+/** @type {Profiles} */
 var profiles = null;
-/**
- * @type {number}
- */
+/** @type {number} */
 var selectedProfileId = null;
-/**
- * @type {boolean}
- */
+/** @type {boolean} */
 var custom = false;
 
 function init() {
