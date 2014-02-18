@@ -11,14 +11,20 @@
  *   'session'   - sessionStorage
  *   'memory'    - in-memory array
  *
- * At most one instance of storage for each type is maintained. The exposed
- * interface of the storage is identical to the API of chrome.storage.
+ * Storage for each type is a singleton. The exposedinterface of the storage
+ * is identical to the API of chrome.storage.
+ *
+ * There are slight differences in how various implentations handle null and
+ * undefined as stored values.
+ *
+ * TODO: Test all this shit in all possible configurations.
  */
 
-var storageByType = [];
+var storageByType = {};
 
 /**
  * @param {string} type
+ * @return {StorageInterface}
  */
 function getStorage(type) {
   if (type in storageByType) {
@@ -30,7 +36,7 @@ function getStorage(type) {
   switch (type) {
     case 'permanent':
       if (chrome && chrome.storage) {
-        storage = chrome.storage.sync;
+        storage = new ChromeStorageWrapper(chrome.storage.sync, 'sync');
       } else {
         storage = new WebStorageWrapper(localStorage);
       }
@@ -38,7 +44,7 @@ function getStorage(type) {
 
     case 'local':
       if (chrome && chrome.storage) {
-        storage = chrome.storage.local;
+        storage = new ChromeStorageWrapper(chrome.storage.local, 'local');
       } else {
         storage = new WebStorageWrapper(localStorage);
       }
@@ -63,15 +69,273 @@ function getStorage(type) {
 
 /**
  * @constructor
- * @implements {Storage}
+ * @interface
+ */
+function StorageInterface() {}
+
+/**
+ * @type {boolean|undefined}
+ */
+StorageInterface.prototype.isSynchronous = false;
+
+/**
+ * @param {string|Object|Array.<string>} keys String: key of the element to be
+ * retrieved, array: keys to be retrieved, object: elements to be retrieved with
+ * defaults.
+ * @param {function(Object)|null} opt_callback A callback, called with
+ * a dictionary {key: value} for the requested elements. In case of null,
+ * the value will be returned from this function directly, or the exception will
+ * be raised.
+ * @return {number|string|Object|undefined} In case callback is provided,
+ * nothing is returned. In case it is not, and keys is a string, and the
+ * undelying storage allows synchronous retrieval, the value is returned.
+ */
+StorageInterface.prototype.get = function(keys, opt_callback) {};
+
+/**
+ * @param {Object} items
+ * @param {function} opt_callback
+ */
+StorageInterface.prototype.set = function(items, opt_callback) {};
+
+/**
+ * @param {string|Array.<string>} keys}
+ * @param {function} opt_callback
+ */
+StorageInterface.prototype.remove = function(keys, opt_callback) {};
+
+/**
+ * @param {function(Object)} callback
+ */
+StorageInterface.prototype.addListener = function(callback) {};
+
+
+/**
+ * @constructor
+ * @implements {StorageInterface}
  */
 function ObjectStorage() {
   this.values_ = {};
+  this.listeners_ = [];
 }
 
-ObjectStorage.prototype.get = function(keys, callback) {
-  return this.values_[key];
+ObjectStorage.prototype.isSynchronous = true;
+
+ObjectStorage.prototype.get = function(keys, opt_callback) {
+  if (!opt_callback) {
+    if (typeof keys === 'string')
+      return this.values_[keys];
+    throw 'No callback and key is not string.';
+  }
+
+  var result = {};
+
+  switch (typeof keys) {
+    case 'string':
+      result[keys] = this.values_[keys];
+      break;
+
+    case 'object':
+      if (Array.isArray(keys)) {
+        for (var i = 0; i < keys.length; i++) {
+          result[keys[i]] = this.values_[keys[i]];
+        }
+      } else {
+        for (var key in keys) {
+          result[key] = (key in this.values_) ? this.values_[key]
+                                              : keys[key];
+        }
+      }
+      break;
+
+    default:
+      throw 'Wrong type of keys.';
+  }
+
+  setTimeout(opt_callback.bind(null, result), 0);
 };
 
-ObjectStorage.prototype.set = function(key, value) {
+ObjectStorage.prototype.set = function(items, opt_callback) {
+  var changes = {};
+  for (var key in items) {
+    changes[key] = {'oldValue': this.values_[key], 'newValue': items[key]};
+    this.values_[key] = items[key];
+  }
+
+  this.fire_(changes);
+
+  if (opt_callback) {
+    setTimeout(opt_callback, 0);
+  }
 };
+
+ObjectStorage.prototype.remove = function(keys, opt_callback) {
+  if (typeof keys === 'string')
+    keys = [keys];
+
+  var changes = {};
+  for (var i = 0; i < keys.length; i++) {
+    changes[keys[i]] = {'oldValue': this.values_[keys[i]]};
+    delete this.values_[keys[i]];
+  }
+
+  this.fire_(changes);
+  if (opt_callback) {
+    setTimeout(opt_callback, 0);
+  }
+};
+
+ObjectStorage.prototype.addListener = function(listener) {
+  this.listeners_.push(listener);
+};
+
+ObjectStorage.prototype.fire_ = function(changes) {
+  for (var i = 0; i < this.listeners_.length; i++) {
+    setTimeout(this.listeners_[i].bind(null, changes), 0);
+  }
+};
+
+
+/**
+ * @constructor
+ * @implements {StorageInterface}
+ * @param {Object} storage Either chrome.storage.local or chrome.storage.sync.
+ * @param {string} areaName 'local' or 'sync'.
+ */
+function ChromeStorageWrapper(storage, areaName) {
+  this.area_ = areaName;
+  this.listeners_ = [];
+  this.get = storage.get.bind(storage);
+  this.set = storage.set.bind(storage);
+  this.remove = storage.remove.bind(storage);
+  chrome.storage.addListener(this.handleChanges_.bind(this));
+}
+
+ChromeStorageWrapper.prototype.isSynchronous = false;
+
+ChromeStorageWrapper.prototype.addListener = function(listener) {
+  this.listeners_.push(listener);
+};
+
+ChromeStorageWrapper.prototype.handleChanges_ = function(changes, areaName) {
+  if (areaName === this.area_) {
+    for (var i = 0; i < this.listeners_.length; i++) {
+      this.listeners_[i](changes);
+    }
+  }
+};
+
+
+/**
+ * @constructor
+ * @implements {StorageInterface}
+ * @param {Storage} storage localStorage or sessionStorage.
+ */
+function WebStorageWrapper(storage, opt_window) {
+  this.storage_ = storage;
+  this.listeners_ = [];
+  if (!opt_window)
+    opt_window = window;
+  opt_window.addEventListener('storage', this.handleEvent_.bind(this));
+}
+
+WebStorageWrapper.prototype.isSynchronous = true;
+
+WebStorageWrapper.prototype.get = function(keys, opt_callback) {
+  console.log('WebStorageWrapper.get');
+
+  if (!opt_callback) {
+    if (typeof keys === 'string')
+      return JSON.parse(this.storage_.getItem(keys));
+    throw 'No callback and key is not string.';
+  }
+
+  var result = {};
+
+  switch (typeof keys) {
+    case 'string':
+      result[keys] = JSON.parse(this.storage_.getItem(keys));
+      break;
+
+    case 'object':
+      if (Array.isArray(keys)) {
+        for (var i = 0; i < keys.length; i++) {
+          result[keys[i]] = JSON.parse(this.storage_.getItem(keys[i]));
+        }
+      } else {
+        for (var key in keys) {
+          var value = this.storage_.getItem(key);
+          result[key] = (value === null) ? keys[key] : JSON.parse(value);
+        }
+      }
+
+    default:
+      throw 'Wrong type of keys.';
+  }
+
+  setTimeout(opt_callback.bind(null, result), 0);
+};
+
+/**
+ * @param {Object} items
+ * @param {function} opt_callback
+ */
+WebStorageWrapper.prototype.set = function(items, opt_callback) {
+  console.log('WebStorageWrapper.prototype.set');
+  var changes = {};
+  for (var key in items) {
+    changes[key] = {'oldValue': JSON.parse(this.storage_.getItem(key)),
+                    'newValue': items[key]};
+    this.storage_.setItem(JSON.stringify(items[key]));
+  }
+
+  this.fire_(changes);
+
+  if (opt_callback) {
+    setTimeout(opt_callback, 0);
+  }
+};
+
+/**
+ * @param {string|Array.<string>} keys}
+ * @param {function} opt_callback
+ */
+WebStorageWrapper.prototype.remove = function(keys, opt_callback) {
+  if (typeof keys === 'string')
+    keys = [keys];
+
+  var changes = {};
+  for (var i = 0; i < keys.length; i++) {
+    changes[keys[i]] = {'oldValue': JSON.parse(this.storage_.getItem(keys[i]))};
+    this.storage_.removeItem(keys[i]);
+  }
+
+  this.fire_(changes);
+};
+
+WebStorageWrapper.prototype.addListener = function(listener) {
+  this.listeners_.push(listener);
+};
+
+WebStorageWrapper.prototype.fire_ = function(changes) {
+  for (var i = 0; i < this.listeners_.length; i++) {
+    setTimeout(this.listeners_[i].bind(null, changes), 0);
+  }
+};
+
+/**
+ * @param {Event} event
+ */
+WebStorageWrapper.prototype.handleEvent_ = function(event) {
+  if (event.storageArea != this.storage_)
+    return;
+
+  var changes = {};
+  changes[event.key] = {'oldValue': event.oldValue,
+                        'newValue': event.newValue};
+  this.fire_(changes);
+};
+
+exports.getStorage = getStorage;
+exports.ObjectStorage = ObjectStorage;
+exports.WebStorageWrapper = WebStorageWrapper;
