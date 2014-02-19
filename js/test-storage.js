@@ -15,10 +15,8 @@ function nullOrUndef(x) {
 }
 
 function storageTestSync(test, storage) {
-  console.log(storage.isSynchronous);
   test.ok(storage.isSynchronous);
   storage.set({'a': 'b'});
-  console.log('set run');
   test.strictEqual(storage.get('a'), 'b');
 
   test.ok(nullOrUndef(storage.get('c')));
@@ -160,8 +158,6 @@ var storageTestListeners = function(test, storage) {
 
     test.ok(i < expect.length);
     if (i >= expect.length) {
-      console.log(expect);
-      console.log(changes);
       test.done();
     }
     expect.splice(i, 1);
@@ -257,8 +253,8 @@ LocalStorageStub.prototype.removeItem = function(key, opt_dispatch) {
     event = {
       'type': 'storage',
       'key': key,
-      'newValue': value,
-      'oldValue': null,
+      'newValue': null,
+      'oldValue': this.values_[key],
       'storageArea': this
     };
   }
@@ -274,13 +270,13 @@ function WindowStub() {
   this.listeners_ = [];
 }
 
-WindowStub.prototype.addEventListener = function(listener) {
+WindowStub.prototype.addEventListener = function(type, listener) {
   this.listeners_.push(listener);
 };
 
 WindowStub.prototype.dispatchEvent = function(event) {
   for (var i = 0; i < this.listeners_.length; i++)
-    setTimeout(this.listeners_.bind(null, event), 0);
+    setTimeout(this.listeners_[i].bind(null, event), 0);
 };
 
 
@@ -326,3 +322,46 @@ exports.testWebStorageListeners = function(test) {
   storageTestListeners(test, storage);
 };
 
+exports.testWebStorageOtherWindow = function(test) {
+  var window = new WindowStub();
+  var localStorage = new LocalStorageStub(window);
+  var storage = new WebStorageWrapper(localStorage, window);
+
+  var expect = [];
+  var continuation = null;
+
+  var listener = function(changes) {
+    test.ok(expect.length > 0);
+    for (var i = 0; i < expect.length; i++) {
+      if (deepeq(expect[i], changes))
+        break;
+    }
+
+    test.ok(i < expect.length);
+    if (i >= expect.length)
+      test.done();
+    expect.splice(i, 1);
+
+    if (expect.length === 0 && continuation)
+      continuation();
+  };
+
+  var continue1 = function() {
+    test.strictEqual(storage.get('a'), 'b');
+    localStorage.removeItem('a', true);
+    continuation = continue2;
+    expect.push({'a': {'oldValue': 'b', 'newValue': null}});
+  };
+
+  var continue2 = function() {
+    test.done();
+  };
+
+  storage.addListener(listener);
+
+  localStorage.setItem('a', '"b"', true);
+  localStorage.setItem('b', '123', true);
+  expect.push({'a': {'oldValue': null, 'newValue': 'b'}});
+  expect.push({'b': {'oldValue': null, 'newValue': 123}});
+  continuation = continue1;
+};

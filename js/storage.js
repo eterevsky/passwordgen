@@ -242,8 +242,6 @@ function WebStorageWrapper(storage, opt_window) {
 WebStorageWrapper.prototype.isSynchronous = true;
 
 WebStorageWrapper.prototype.get = function(keys, opt_callback) {
-  console.log('WebStorageWrapper.get');
-
   if (!opt_callback) {
     if (typeof keys === 'string')
       return JSON.parse(this.storage_.getItem(keys));
@@ -268,6 +266,7 @@ WebStorageWrapper.prototype.get = function(keys, opt_callback) {
           result[key] = (value === null) ? keys[key] : JSON.parse(value);
         }
       }
+      break;
 
     default:
       throw 'Wrong type of keys.';
@@ -281,12 +280,11 @@ WebStorageWrapper.prototype.get = function(keys, opt_callback) {
  * @param {function} opt_callback
  */
 WebStorageWrapper.prototype.set = function(items, opt_callback) {
-  console.log('WebStorageWrapper.prototype.set');
   var changes = {};
   for (var key in items) {
     changes[key] = {'oldValue': JSON.parse(this.storage_.getItem(key)),
                     'newValue': items[key]};
-    this.storage_.setItem(JSON.stringify(items[key]));
+    this.storage_.setItem(key, JSON.stringify(items[key]));
   }
 
   this.fire_(changes);
@@ -311,6 +309,9 @@ WebStorageWrapper.prototype.remove = function(keys, opt_callback) {
   }
 
   this.fire_(changes);
+  if (opt_callback) {
+    setTimeout(opt_callback, 0);
+  }
 };
 
 WebStorageWrapper.prototype.addListener = function(listener) {
@@ -331,8 +332,13 @@ WebStorageWrapper.prototype.handleEvent_ = function(event) {
     return;
 
   var changes = {};
-  changes[event.key] = {'oldValue': event.oldValue,
-                        'newValue': event.newValue};
+  var oldValue = null;
+  var newValue = null;
+  if (event.oldValue !== null && event.oldValue !== undefined)
+    oldValue = JSON.parse(event.oldValue);
+  if (event.newValue !== null && event.newValue !== undefined)
+    newValue = JSON.parse(event.newValue);
+  changes[event.key] = {'oldValue': oldValue, 'newValue': newValue};
   this.fire_(changes);
 };
 
