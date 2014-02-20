@@ -3,6 +3,7 @@
 var background = null;
 var tab = null;
 var tabDomain = null;
+var domainSettings = null;
 
 function init() {
   chrome.runtime.getBackgroundPage(onBackgroundPage);
@@ -17,6 +18,7 @@ function init() {
 
 function onBackgroundPage(bg) {
   background = bg;
+  domainSettings = new DomainSettings(background.profiles);
   setupProfiles();
   chrome.tabs.query({'active': true, 'currentWindow': true}, onActiveTabs);
 }
@@ -106,12 +108,12 @@ function onActiveTabs(tabs) {
   if (!url) return;
   tab = tabs[0];
   tabDomain = domainFromURL(url);
-  background.getDomainSettings(tabDomain, function(profileId, domain) {
+  domainSettings.get(tabDomain, function(profileId, domain) {
     document.getElementById('domain').value = domain;
     document.getElementById('profile-' + profileId).checked = true;
     onProfileChange();
     if (domain != tabDomain) {
-      background.getDomainSettings(domain, function(profileId1) {
+      domainSettings.get(domain, function(profileId1) {
         document.getElementById('profile-' + profileId1).checked = true;
         onProfileChange();
       });
@@ -165,8 +167,8 @@ function insert() {
 
   var domain = document.getElementById('domain').value;
   var profileId = getProfile();
-  background.updateDomainProfile(domain, profileId);
-  background.updateDomainSubstitute(tabDomain, domain);
+  domainSettings.updateProfile(domain, profileId);
+  domainSettings.updateSubstitute(tabDomain, domain);
 }
 
 function clipboard() {
@@ -175,7 +177,7 @@ function clipboard() {
 
   var domain = document.getElementById('domain').value;
   var profileId = getProfile();
-  background.updateDomainProfile(domain, profileId);
+  domainSettings.updateProfile(domain, profileId);
 }
 
 function options() {

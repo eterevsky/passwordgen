@@ -2,28 +2,6 @@
 
 var profiles = new Profiles();
 
-function updateDomainProfile(domain, profileId) {
-  var item = {};
-  item['domain-profile-' + domain] = profileId;
-  chrome.storage.sync.set(item);
-}
-
-function updateDomainSubstitute(domain, substitute) {
-  var item = {};
-  item['domain-substitute-' + domain] = substitute;
-  chrome.storage.sync.set(item);
-}
-
-function getDomainSettings(domain, callback) {
-  var request = {};
-  request['domain-profile-' + domain] = profiles.getLastUsed();
-  request['domain-substitute-' + domain] = domain;
-  chrome.storage.sync.get(request, function(items) {
-    callback(items['domain-profile-' + domain],
-             items['domain-substitute-' + domain])
-  });
-}
-
 var SYMBOL_SETS = {
   'upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   'lower': 'abcdefghijklmnopqrstuvwxyz',

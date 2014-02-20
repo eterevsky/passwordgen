@@ -10,7 +10,7 @@ function Profiles(opt_storage) {
   /** @type {Object.<number, Object> */
   this.data_ = null;
   /** @type {number} */
-  this.lastUsed_ = 1;
+  this.lastUsed_ = null;
   /** @type {Storage} */
   this.passwords_ = null;
   /** @type {string} */
@@ -21,7 +21,8 @@ function Profiles(opt_storage) {
   this.onReadyCallbacks_ = [];
 
   this.storage_.get(
-      {'profile-ids': []}, this.onProfileIdsReceived_.bind(this));
+      {'profile-ids': [], 'profile-last-used': null},
+      this.onProfileIdsReceived_.bind(this));
   this.storage_.get(
       {'password-storage': 'memory'},
       this.onPasswordStorageReceived_.bind(this));
@@ -62,6 +63,7 @@ Profiles.prototype.maybeReady_ = function() {
  */
 Profiles.prototype.onProfileIdsReceived_ = function(items) {
   this.ids_ = items['profile-ids'];
+  this.lastUsed_ = items['profile-last-used'];
 
   if (this.ids_.length === 0) {
     this.ids_ = [];
@@ -75,6 +77,9 @@ Profiles.prototype.onProfileIdsReceived_ = function(items) {
     }
     this.storage_.get(ids, this.onDataReceived_.bind(this));
   }
+
+  if (this.lastUsed_ === null)
+    this.lastUsed_ = this.ids_[0];
 };
 
 /**
