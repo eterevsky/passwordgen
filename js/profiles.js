@@ -2,8 +2,9 @@
 
 /**
  * @constructor
+ * @param {Storage} opt_storage
  */
-function Profiles() {
+function Profiles(opt_storage) {
   /** @type {Array.<number>} */
   this.ids_ = null;
   /** @type {Object.<number, Object> */
@@ -13,9 +14,11 @@ function Profiles() {
   /** @type {Object.<string, string>} */
   this.passwords_ = {};
   /** @type {string} */
-  this.passwordStorage_ = 'memory';
+  this.passwordStorage_ = null;
   /** @type {Storage} */
-  this.storage_ = getStorage('permanent');
+  this.storage_ = opt_storage || getStorage('permanent');
+  /** @type {function()} */
+  this.onReadyCallbacks_ = [];
 
   this.storage_.get(
       {'profile-ids': []}, this.onProfileIdsReceived_.bind(this));
@@ -24,6 +27,35 @@ function Profiles() {
       this.onPasswordStorageReceived_.bind(this));
   this.storage_.addListener(this.onChanged_.bind(this));
 }
+
+Profiles.prototype.isReady = function() {
+  return this.ids_ !== null && this.data_ !== null &&
+         this.passwordStorage_ !== null;
+};
+
+/**
+ * @param {function()} callback
+ */
+Profiles.prototype.callWhenReady = function(callback) {
+  if (this.isReady()) {
+    setTimeout(callback, 0);
+  } else {
+    this.onReadyCallbacks_.push(callback);
+  }
+};
+
+/**
+ * Checks whether everything is ready and if it is, call the onready callbacks.
+ */
+Profiles.prototype.maybeReady_ = function() {
+  if (this.isReady()) {
+    for (var i = 0; i < this.onReadyCallbacks_.length; i++) {
+      setTimeout(this.onReadyCallbacks_[i], 0);
+    }
+    // To raise an exception in case it is called twice.
+    this.onReadyCallbacks_ = null;
+  }
+};
 
 /**
  * @param {Object} items
@@ -35,6 +67,7 @@ Profiles.prototype.onProfileIdsReceived_ = function(items) {
     this.ids_ = [];
     this.data_ = {};
     this.add();
+    this.maybeReady_();
   } else {
     var ids = [];
     for (var i = 0; i < this.ids_.length; i++) {
@@ -50,6 +83,7 @@ Profiles.prototype.onProfileIdsReceived_ = function(items) {
  */
 Profiles.prototype.onPasswordStorageReceived_ = function(items) {
   this.passwordStorage_ = items['password-storage'];
+  this.maybeReady_();
 };
 
 /**
@@ -68,6 +102,7 @@ Profiles.prototype.onDataReceived_ = function(items) {
       this.passwords_[id] = items[key];
     }
   }
+  this.maybeReady_();
 };
 
 /**
@@ -128,7 +163,7 @@ Profiles.prototype.storeLastUsed_ = function() {
 /**
  * @return {Array.<Object>}
  */
-Profiles.prototype.getAll = function() {
+Profiles.prototype.getAll = function(callback) {
   var profs = [];
   for (var i = 0; i < this.ids_.length; i++) {
     profs.push(this.data_[this.ids_[i]]);

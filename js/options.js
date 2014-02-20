@@ -10,7 +10,11 @@ var custom = false;
 function init() {
   hideWebsiteMenu();
 
-  chrome.runtime.getBackgroundPage(onBackgroundPage);
+  profiles = new Profiles();
+  profiles.callWhenReady(onProfilesReady);
+}
+
+function onProfilesReady() {
   document.getElementById('add-profile').addEventListener('click', addProfile);
   document.getElementById('profile-name').addEventListener('input', nameChange);
 //  document.getElementById('hash-function-sha3').addEventListener(
@@ -42,6 +46,10 @@ function init() {
   for (var i = 0; i < passwordStorage.length; i++) {
     passwordStorage[i].addEventListener('click', passwordStorageChange);
   }
+
+  setPasswordStorage();
+  populateProfiles();
+  selectProfile(profiles.getLastUsed());
 }
 
 function hideWebsiteMenu() {
@@ -51,13 +59,6 @@ function hideWebsiteMenu() {
       menu[i].classList.add('hidden');
     }
   }
-}
-
-function onBackgroundPage(bg) {
-  profiles = bg.profiles;
-  setPasswordStorage();
-  populateProfiles();
-  selectProfile(profiles.getLastUsed());
 }
 
 function setPasswordStorage() {
