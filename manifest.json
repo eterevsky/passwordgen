@@ -15,23 +15,7 @@
     "192": "icons/icon-192.png",
     "256": "icons/icon-256.png"
   },
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
-  "background": {
-    "scripts": [
-      "js/profiles.js",
-      "js/storage.js",
-      "js/background.js",
-      "js/biguint.js",
-      "js/mstrings.js",
-      "jshash/md5.js",
-      "jshash/sha1.js",
-      "jshash/sha256.js"
-    ],
-    "persistent": true
-  },
+  "permissions": ["activeTab", "storage"],
   "browser_action": {
     "default_icon": {
       "16": "icons/icon-16.png",

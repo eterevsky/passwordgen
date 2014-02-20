@@ -1,7 +1,5 @@
 // Copyright (c) 2014 Oleg Eterevsky. Licensed under the MIT license.
 
-var profiles = new Profiles();
-
 var SYMBOL_SETS = {
   'upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   'lower': 'abcdefghijklmnopqrstuvwxyz',

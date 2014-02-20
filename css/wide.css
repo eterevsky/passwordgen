@@ -3,6 +3,14 @@
   width: 50%;
 }
 
+#profile-block > * {
+  vertical-align: middle;
+}
+
+#profiles-line {
+  display: inline-block;
+}
+
 #password-line {
   display: inline-block;
 }

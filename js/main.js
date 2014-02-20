@@ -1,34 +1,30 @@
 // Copyright (c) 2014 Oleg Eterevsky. Licensed under the MIT license.
 
-var background = null;
-var tab = null;
-var tabDomain = null;
-var domainSettings = null;
+var profiles = null;
+var popup = null;
+
 
 function init() {
-  chrome.runtime.getBackgroundPage(onBackgroundPage);
+  profiles = new Profiles();
+  domainSettings = new DomainSettings(profiles);
+  if (typeof Popup !== 'undefined')
+    popup = new Popup();
+
   document.getElementById('domain').addEventListener('input',
-                                                     generatePassword);
+                                                     onDomainChange);
   document.getElementById('password').addEventListener('input',
                                                        generatePassword);
-  document.getElementById('button-insert').addEventListener('click', insert);
   document.getElementById('button-copy').addEventListener('click', clipboard);
-  document.getElementById('button-options').addEventListener('click', options);
-}
-
-function onBackgroundPage(bg) {
-  background = bg;
-  domainSettings = new DomainSettings(background.profiles);
-  setupProfiles();
-  chrome.tabs.query({'active': true, 'currentWindow': true}, onActiveTabs);
+  profiles.callWhenReady(setupProfiles);
 }
 
 function setupProfiles() {
-  var profiles = background.profiles.getAll();
-  var profilesBlock = document.getElementById('profile-block');
+  var profilesList = profiles.getAll();
+  var profilesBlock = document.getElementById('profiles-line') ||
+                      document.getElementById('profile-block');
 
-  for (var i = 0; i < profiles.length; i++) {
-    var profile = profiles[i];
+  for (var i = 0; i < profilesList.length; i++) {
+    var profile = profilesList[i];
     var div = document.createElement('div');
     div.classList.add('profile-option');
     var input = document.createElement('input');
@@ -45,9 +41,10 @@ function setupProfiles() {
     profilesBlock.appendChild(div);
   }
 
-  if (profiles.length === 1) {
+  if (profilesList.length === 1)
     profilesBlock.classList.add('hidden');
-  }
+
+  onProfileChange();
 }
 
 function getProfile() {
@@ -66,65 +63,25 @@ function getProfile() {
 
 function onProfileChange() {
   var profileId = getProfile();
-  var password = background.profiles.getPassword(profileId) || '';
-  document.getElementById('password').value = password;
-  generatePassword();
-  background.profiles.updateLastUsed(profileId);
+  profiles.getPassword(profileId, function(password) {
+    document.getElementById('password').value = password;
+    generatePassword();
+    profiles.updateLastUsed(profileId);
+  });
 }
 
-// Maybe use a complete list? It's too long though.
-var EFFECTIVE_TLD = ['com.au', 'co.uk', 'co.jp'];
-
-function domainFromURL(url) {
-  var fullDomain = url.match(/^\w+:\/\/((?:\w[-\w\d]*\.)*\w[-\w\d]*)\/.*/)[1];
-  if (!fullDomain)
-    return null;
-
-  var parts = fullDomain.split('.');
-  if (parts.length <= 2)
-    return fullDomain;
-  var third = false;
-  for (var i = 0; i < EFFECTIVE_TLD.length; i++) {
-    var tld = EFFECTIVE_TLD[i];
-    if (fullDomain.indexOf(tld, fullDomain.length - tld.length) != -1) {
-      third = true;
-      break;
-    }
-  }
-
-  if (third) {
-    return parts.slice(parts.length - 3).join('.');
-  } else {
-    return parts.slice(parts.length - 2).join('.');
-  }
-}
-
-function onActiveTabs(tabs) {
-  if (tabs.length < 1) {
-    background.console.error('No active tabs!');
-    return;
-  }
-  var url = tabs[0].url;
-  if (!url) return;
-  tab = tabs[0];
-  tabDomain = domainFromURL(url);
-  domainSettings.get(tabDomain, function(profileId, domain) {
-    document.getElementById('domain').value = domain;
-    document.getElementById('profile-' + profileId).checked = true;
+function onDomainChange() {
+  var domain = document.getElementById('domain').value;;
+  domainSettings.get(domain, function(profileId1) {
+    document.getElementById('profile-' + profileId1).checked = true;
     onProfileChange();
-    if (domain != tabDomain) {
-      domainSettings.get(domain, function(profileId1) {
-        document.getElementById('profile-' + profileId1).checked = true;
-        onProfileChange();
-      });
-    }
   });
 }
 
 function generatePassword() {
   var password = document.getElementById('password').value;
   var profileId = getProfile();
-  var passwordStatus = background.profiles.verifyPassword(profileId, password);
+  var passwordStatus = profiles.verifyPassword(profileId, password);
 
   var yes = document.getElementById('password-yes');
   var no = document.getElementById('password-no');
@@ -147,28 +104,8 @@ function generatePassword() {
 
   var domain = document.getElementById('domain').value;
 
-  document.getElementById('generated-password').value = background.generate(
+  document.getElementById('generated-password').value = generate(
       profileId, domain, password);
-}
-
-function insert() {
-  var genPassword = document.getElementById('generated-password').value;
-  chrome.tabs.executeScript({
-    'allFrames': true,
-    'code': 'var pass = "' + genPassword + '";' +
-            'var inputs = document.getElementsByTagName("input");' +
-            'for (var i = 0; i < inputs.length; i++) {' +
-              'var input = inputs[i];' +
-              'if (input.getAttribute("type") === "password") {' +
-                'input.value = pass;' +
-              '}' +
-            '}'
-  });
-
-  var domain = document.getElementById('domain').value;
-  var profileId = getProfile();
-  domainSettings.updateProfile(domain, profileId);
-  domainSettings.updateSubstitute(tabDomain, domain);
 }
 
 function clipboard() {
@@ -180,8 +117,101 @@ function clipboard() {
   domainSettings.updateProfile(domain, profileId);
 }
 
-function options() {
-  chrome.tabs.create({'url': 'options.html'});
+var SYMBOL_SETS = {
+  'upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  'lower': 'abcdefghijklmnopqrstuvwxyz',
+  'digits': '0123456789',
+  'symbols': '`~!@#$%^&*()_-+={}|[]\\:";\'<>?,./'
+};
+
+/**
+ * Check whether the string s contains at least one character from each of the
+ * sets.
+ * @param {string} s
+ * @param {Array.<string>} sets
+ * @return {boolean}
+ */
+function checkAllCharacterTypes(s, sets) {
+  var found = [];
+  var i, j;
+  for (i = 0; i < sets.length; i++) {
+    found.push(false);
+  }
+
+  for (i = 0; i < s.length; i++) {
+    for (j = 0; j < sets.length; j++) {
+      if (sets[j].indexOf(s[i]) !== -1) {
+        found[j] = true;
+      }
+    }
+  }
+
+  for (i = 0; i < found.length; i++) {
+    if (!found[i])
+      return false;
+  }
+
+  return true;
+}
+
+function generate(profileId, domain, password) {
+  profiles.setPassword(profileId, password);
+  var profile = profiles.get(profileId);
+  var characters = profile['char-custom']
+  var length = profile['length'];
+
+  if (characters.length < 2)
+    return '';
+
+  /** @type {function(string, string)} */
+  var hashFunction;
+  switch (profile['hash']) {
+    case 'md5':
+      hashFunction = any_md5;
+      hashFunctionRStr = rstr_md5;
+      break;
+
+    case 'sha1':
+      hashFunction = any_sha1;
+      hashFunctionRStr = rstr_sha1;
+      break;
+
+    case 'sha256':
+      hashFunction = any_sha256;
+      hashFunctionRStr = rstr_sha256;
+      break;
+
+    default:
+      console.error('Hash algorithm not supported:', profile['hash']);
+      return '';
+  }
+
+  var generatedPassword = ''
+  for (var count = 0; generatedPassword.length < length; count++) {
+    var data = count ? password + '\n' + count + domain : password + domain;
+    generatedPassword += hashFunction(data, characters);
+  }
+
+  generatedPassword = generatedPassword.substring(0, length);
+
+  if (profile['char-mix']) {
+    var sets = [];
+    if (profile['char-upper'])
+      sets.push(SYMBOL_SETS['upper']);
+    if (profile['char-lower'])
+      sets.push(SYMBOL_SETS['lower']);
+    if (profile['char-digits'])
+      sets.push(SYMBOL_SETS['digits']);
+    if (profile['char-symbols'])
+      sets.push(SYMBOL_SETS['symbols']);
+
+    if (!checkAllCharacterTypes(generatedPassword, sets)) {
+      var hash = hashFunctionRStr(password + domain);
+      generatedPassword = rstrToMStr(hash, length, sets);
+    }
+  }
+
+  return generatedPassword;
 }
 
 window.addEventListener('load', init);

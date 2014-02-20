@@ -22,15 +22,14 @@ var storageByImplType = {};
 
 /**
  * @param {string} type
- * @param {boolean} [opt_sync] Always return synchronous storage.
  * @return {StorageInterface}
  */
-function getStorage(type, opt_sync) {
+function getStorage(type) {
   var implType;
 
   switch (type) {
     case 'permanent':
-      if (!opt_sync && chrome && chrome.storage) {
+      if (chrome && chrome.storage) {
         implType = 'chrome.storage.sync';
       } else {
         implType = 'localStorage';
@@ -38,7 +37,7 @@ function getStorage(type, opt_sync) {
       break;
 
     case 'local':
-      if (!opt_sync && chrome && chrome.storage) {
+      if (chrome && chrome.storage) {
         implType = 'chrome.storage.local';
       } else {
         implType = 'localStorage';

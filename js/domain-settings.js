@@ -38,12 +38,14 @@ DomainSettings.prototype.updateSubstitute = function(domain, substitute) {
  * @param {function(number, string)} callback
  */
 DomainSettings.prototype.get = function(domain, callback) {
-  var request = {};
-  request['domain-profile-' + domain] = this.profiles_.getLastUsed();
-  request['domain-substitute-' + domain] = domain;
-  this.storage_.get(request, function(items) {
-    callback(items['domain-profile-' + domain],
-             items['domain-substitute-' + domain])
-  });
+  this.profiles_.callWhenReady(function() {
+    var request = {};
+    request['domain-profile-' + domain] = this.profiles_.getLastUsed();
+    request['domain-substitute-' + domain] = domain;
+    this.storage_.get(request, function(items) {
+      callback(items['domain-profile-' + domain],
+               items['domain-substitute-' + domain])
+    }.bind(this));
+  }.bind(this));
 }
 

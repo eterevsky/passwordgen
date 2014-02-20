@@ -94,7 +94,7 @@ Profiles.prototype.onPasswordStorageReceived_ = function(items) {
  * @param {string} type
  */
 Profiles.prototype.initPasswords_ = function(type) {
-  if (this.password_ !== null &&
+  if (this.passwords_ !== null &&
       this.passwordStorage_ !== null &&
       this.passwordStorage_ !== type) {
     // Password storage type changed. Need to delete passwords in the old
@@ -114,7 +114,7 @@ Profiles.prototype.initPasswords_ = function(type) {
     case 'memory':    storageType = 'session'; break;
     case 'permanent': storageType = 'local'; break;
   }
-  this.passwords_ = getStorage(storageType, true /* sync */);
+  this.passwords_ = getStorage(storageType);
 };
 
 /**
@@ -305,9 +305,12 @@ Profiles.prototype.update = function(profile) {
 
 /**
  * @param {number} id
+ * @param {function(string)} callback
  */
-Profiles.prototype.getPassword = function(id) {
-  return this.passwords_.get('password-' + id) || '';
+Profiles.prototype.getPassword = function(id, callback) {
+  this.passwords_.get('password-' + id, function(items) {
+    callback(items['password-' + id] || '');
+  }.bind(this));
 };
 
 /**
