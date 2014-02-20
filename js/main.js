@@ -70,7 +70,7 @@ function onProfileChange() {
   background.profiles.updateLastUsed(profileId);
 }
 
-// May use a complete list, but it's to long and it doesn't pay off.
+// Maybe use a complete list? It's too long though.
 var EFFECTIVE_TLD = ['com.au', 'co.uk', 'co.jp'];
 
 function domainFromURL(url) {

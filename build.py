@@ -7,8 +7,11 @@ import builder.html as html
 import builder.js as js
 import builder.util as util
 
-FILES = ['css/main.css', 'css/options.css']
-
+FILES = ['css/main.css',
+         'css/narrow.css',
+         'css/narrow-options.css',
+         'css/web.css',
+         'css/wide.css']
 
 def do_compile(source_dir, app_builder):
   """Compile the javascript files in background page and HTMLs."""

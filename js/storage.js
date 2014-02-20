@@ -11,13 +11,11 @@
  *   'session'   - sessionStorage
  *   'memory'    - in-memory array
  *
- * Storage for each type is a singleton. The exposedinterface of the storage
- * is identical to the API of chrome.storage.
+ * Storage for each type is a singleton. The exposed interface of the storage
+ * is similar to the API of chrome.storage.
  *
  * There are slight differences in how various implentations handle null and
  * undefined as stored values.
- *
- * TODO: Test all this shit in all possible configurations.
  */
 
 var storageByType = {};
