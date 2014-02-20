@@ -18,37 +18,64 @@
  * undefined as stored values.
  */
 
-var storageByType = {};
+var storageByImplType = {};
 
 /**
  * @param {string} type
+ * @param {boolean} [opt_sync] Always return synchronous storage.
  * @return {StorageInterface}
  */
-function getStorage(type) {
-  if (type in storageByType) {
-    return storageByType[type];
-  }
-
-  storage = null;
+function getStorage(type, opt_sync) {
+  var implType;
 
   switch (type) {
     case 'permanent':
-      if (chrome && chrome.storage) {
-        storage = new ChromeStorageWrapper(chrome.storage.sync, 'sync');
+      if (!opt_sync && chrome && chrome.storage) {
+        implType = 'chrome.storage.sync';
       } else {
-        storage = new WebStorageWrapper(localStorage);
+        implType = 'localStorage';
       }
       break;
 
     case 'local':
-      if (chrome && chrome.storage) {
-        storage = new ChromeStorageWrapper(chrome.storage.local, 'local');
+      if (!opt_sync && chrome && chrome.storage) {
+        implType = 'chrome.storage.local';
       } else {
-        storage = new WebStorageWrapper(localStorage);
+        implType = 'localStorage';
       }
       break;
 
     case 'session':
+      implType = 'sessionStorage';
+      break;
+
+    case 'memory':
+      implType = 'memory';
+      break;
+
+    default:
+      throw 'Unknown storage type: ' + type;
+  }
+
+  if (implType in storageByImplType)
+    return storageByImplType[implType];
+
+  var storage;
+
+  switch (implType) {
+    case 'chrome.storage.sync':
+      storage = new ChromeStorageWrapper(chrome.storage.sync, 'sync');
+      break;
+
+    case 'chrome.storage.local':
+      storage = new ChromeStorageWrapper(chrome.storage.local, 'local');
+      break;
+
+    case 'localStorage':
+      storage = new WebStorageWrapper(localStorage);
+      break;
+
+    case 'sessionStorage':
       storage = new WebStorageWrapper(sessionStorage);
       break;
 
@@ -57,10 +84,10 @@ function getStorage(type) {
       break;
 
     default:
-      throw "Unknown storage type: " + type;
+      throw 'Internal error';
   }
 
-  storageByType[type] = storage;
+  storageByImplType[implType] = storage;
   return storage;
 }
 
