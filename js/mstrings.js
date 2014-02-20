@@ -1,6 +1,8 @@
 // Copyright (c) 2013 Oleg Eterevsky. Licensed under the MIT license.
 
-var BigUInt = require('./biguint').BigUInt;
+if (typeof require !== 'undefined') {
+  var BigUInt = require('./biguint').BigUInt;
+}
 
 /**
  * @constructor
@@ -141,4 +143,6 @@ function rstrToMStr(data, length, sets) {
   return MStrings.instance.encode(data, length, sets);
 }
 
-exports.MStrings = MStrings;
+if (typeof exports !== 'undefined') {
+  exports.MStrings = MStrings;
+}

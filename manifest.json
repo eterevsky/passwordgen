@@ -21,6 +21,8 @@
   ],
   "background": {
     "scripts": [
+      "js/profiles.js",
+      "js/storage.js",
       "js/background.js",
       "js/biguint.js",
       "js/mstrings.js",

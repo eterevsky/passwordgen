@@ -193,4 +193,6 @@ BigUInt.gt = function(a, b) {
   }
 };
 
-exports.BigUInt = BigUInt;
+if (typeof exports !== 'undefined') {
+  exports.BigUInt = BigUInt;
+}

@@ -208,7 +208,7 @@ function ChromeStorageWrapper(storage, areaName) {
   this.get = storage.get.bind(storage);
   this.set = storage.set.bind(storage);
   this.remove = storage.remove.bind(storage);
-  chrome.storage.addListener(this.handleChanges_.bind(this));
+  chrome.storage.onChanged.addListener(this.handleChanges_.bind(this));
 }
 
 ChromeStorageWrapper.prototype.isSynchronous = false;
@@ -342,6 +342,8 @@ WebStorageWrapper.prototype.handleEvent_ = function(event) {
   this.fire_(changes);
 };
 
-exports.getStorage = getStorage;
-exports.ObjectStorage = ObjectStorage;
-exports.WebStorageWrapper = WebStorageWrapper;
+if (typeof exports !== 'undefined') {
+  exports.getStorage = getStorage;
+  exports.ObjectStorage = ObjectStorage;
+  exports.WebStorageWrapper = WebStorageWrapper;
+}
