@@ -42,7 +42,7 @@ function setupProfiles() {
   }
 
   if (profilesList.length === 1)
-    profilesBlock.classList.add('hidden');
+    document.getElementById('profile-block').classList.add('hidden');
 
   onProfileChange();
 }
