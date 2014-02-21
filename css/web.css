@@ -1,3 +1,5 @@
+
+
 #content {
   max-width: 600px;
   margin: 0px auto;
@@ -28,6 +30,13 @@ h1 {
 
 .menu a {
   color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.menu span {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .menu a:hover {
