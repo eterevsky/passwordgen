@@ -8,7 +8,7 @@
  * priority:
  *   'permanent' - chrome.storage.sync, localStorage
  *   'local'     - chrome.storage.local, localStorage
- *   'session'   - sessionStorage
+ *   'session'   - array in background page, sessionStorage
  *   'memory'    - in-memory array
  *
  * Storage for each type is a singleton. The exposed interface of the storage
@@ -29,7 +29,7 @@ function getStorage(type) {
 
   switch (type) {
     case 'permanent':
-      if (chrome && chrome.storage) {
+      if (typeof chrome !== 'undefined' && chrome.storage) {
         implType = 'chrome.storage.sync';
       } else {
         implType = 'localStorage';
@@ -37,7 +37,7 @@ function getStorage(type) {
       break;
 
     case 'local':
-      if (chrome && chrome.storage) {
+      if (typeof chrome !== 'undefined' && chrome.storage) {
         implType = 'chrome.storage.local';
       } else {
         implType = 'localStorage';
@@ -45,7 +45,11 @@ function getStorage(type) {
       break;
 
     case 'session':
-      implType = 'sessionStorage';
+      if (BackgroundStorage.isAvailable()) {
+        implType = 'background';
+      } else {
+        implType = 'sessionStorage';
+      }
       break;
 
     case 'memory':
@@ -76,6 +80,10 @@ function getStorage(type) {
 
     case 'sessionStorage':
       storage = new WebStorageWrapper(sessionStorage);
+      break;
+
+    case 'background':
+      storage = new BackgroundStorage();
       break;
 
     case 'memory':
@@ -371,3 +379,54 @@ if (typeof exports !== 'undefined') {
   exports.ObjectStorage = ObjectStorage;
   exports.WebStorageWrapper = WebStorageWrapper;
 }
+
+
+/**
+ * Store data in ObjectStorage created on the background page. For this to work
+ * @constructor
+ */
+function BackgroundStorage() {
+}
+
+/**
+ * We can't synchronously check whether the background page contains Storage.
+ */
+BackgroundStorage.isAvailable = function() {
+  if (!(typeof chrome !== 'undefined' &&
+        chrome.runtime &&
+        chrome.runtime.getBackgroundPage &&
+        chrome.runtime.getManifest))
+    return false;
+  var manifest = chrome.runtime.getManifest();
+  return manifest['app'] &&
+         manifest['app']['background'] &&
+         manifest['app']['background']['scripts'] ||  // <-- OR
+         manifest['background'] &&
+         manifest['background']['scripts'];
+};
+
+BackgroundStorage.prototype.isSynchronous = false;
+
+BackgroundStorage.prototype.get = function(keys, callback) {
+  chrome.runtime.getBackgroundPage(function(bg) {
+    bg.getStorage('memory').get(keys, callback);
+  }.bind(this));
+};
+
+BackgroundStorage.prototype.set = function(items, opt_callback) {
+  chrome.runtime.getBackgroundPage(function(bg) {
+    bg.getStorage('memory').set(items, opt_callback);
+  }.bind(this));
+};
+
+BackgroundStorage.prototype.remove = function(keys, opt_callback) {
+  chrome.runtime.getBackgroundPage(function(bg) {
+    bg.getStorage('memory').remove(keys, opt_callback);
+  }.bind(this));
+};
+
+BackgroundStorage.prototype.addListener = function(listener) {
+  chrome.runtime.getBackgroundPage(function(bg) {
+    bg.getStorage('memory').addListener(listener);
+  }.bind(this));
+};
