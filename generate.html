@@ -4,7 +4,6 @@
   <title>Password Generator</title>
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/web.css">
   <link rel="stylesheet" media="(min-width: 400px)" href="css/wide.css">
   <link rel="stylesheet" media="(max-width: 400px)" href="css/narrow.css">
   <script src="js/analytics.js" type="text/javascript"></script>
@@ -12,13 +11,15 @@
   <script src="js/domain-settings.js" type="text/javascript"></script>
   <script src="js/main.js" type="text/javascript"></script>
   <script src="js/mstrings.js" type="text/javascript"></script>
+  <script src="js/popup.js" type="text/javascript"></script>
   <script src="js/profiles.js" type="text/javascript"></script>
   <script src="js/storage.js" type="text/javascript"></script>
+  <script src="js/util.js" type="text/javascript"></script>
   <script src="jshash/md5.js" type="text/javascript"></script>
   <script src="jshash/sha1.js" type="text/javascript"></script>
   <script src="jshash/sha256.js" type="text/javascript"></script>
 </head>
-<body>
+<body class="web generate">
   <div id="content">
     <h1>Password Generator</h1>
 
@@ -50,7 +51,9 @@
         <input type="text" id="generated-password" size="20" readonly value="">
       </div>
       <div id="buttons">
+        <button id="button-insert">Insert</button>
         <button id="button-copy">Copy</button>
+        <button id="button-options">Options</button>
       </div>
     </div>
   </div>

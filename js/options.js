@@ -8,7 +8,7 @@ var selectedProfileId = null;
 var custom = false;
 
 function init() {
-  hideWebsiteMenu();
+  initConf();
 
   profiles = new Profiles();
   profiles.callWhenReady(onProfilesReady);
@@ -41,6 +41,8 @@ function onProfilesReady() {
       'change', rangeChange);
   document.getElementById('length-number').addEventListener(
       'change', lengthChange);
+  document.getElementById('button-close').addEventListener(
+      'click', window.close.bind(window));
 
   var passwordStorage = document.getElementsByName('password-storage');
   for (var i = 0; i < passwordStorage.length; i++) {
@@ -50,15 +52,7 @@ function onProfilesReady() {
   setPasswordStorage();
   populateProfiles();
   selectProfile(profiles.getLastUsed());
-}
-
-function hideWebsiteMenu() {
-  if (chrome && chrome.extension) {
-    var menu = document.getElementsByClassName('menu');
-    for (var i = 0; i < menu.length; i++) {
-      menu[i].classList.add('hidden');
-    }
-  }
+  adjustWindowSize(600);
 }
 
 function setPasswordStorage() {
@@ -255,7 +249,7 @@ function selectProfile(profileId) {
 function deleteProfile(profileId) {
   var name = profiles.getName(profileId);
 
-  if (confirm('Delete the profile "' + name + '"?')) {
+  if (CONF === 'app' || confirm('Delete the profile "' + name + '"?')) {
     profiles.deleteProfile(profileId);
     populateProfiles();
     if (profileId === selectedProfileId) {

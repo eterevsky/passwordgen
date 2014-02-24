@@ -5,23 +5,53 @@ var popup = null;
 
 
 function init() {
+  initConf();
   profiles = new Profiles();
   domainSettings = new DomainSettings(profiles);
-  if (typeof Popup !== 'undefined')
+
+  if (CONF === 'extension')
     popup = new Popup();
+
+  if (CONF === 'app') {
+    document.getElementById('button-options').addEventListener(
+        'click', openOptionsWindow);
+  }
 
   document.getElementById('domain').addEventListener('input',
                                                      onDomainChange);
   document.getElementById('password').addEventListener('input',
                                                        generatePassword);
   document.getElementById('button-copy').addEventListener('click', clipboard);
+
   profiles.callWhenReady(setupProfiles);
+  profiles.addListener(profileListener);
+}
+
+function profileListener(profileSetChanged) {
+  if (profileSetChanged) {
+    setupProfiles();
+  } else {
+    generatePassword();
+  }
+}
+
+function openOptionsWindow() {
+  var options = {
+    frame: 'chrome',
+    width: 600,
+    height: 800
+  };
+
+  chrome.app.window.create('options.html', options);
 }
 
 function setupProfiles() {
   var profilesList = profiles.getAll();
   var profilesBlock = document.getElementById('profiles-line') ||
                       document.getElementById('profile-block');
+  while (profilesBlock.firstChild) {
+    profilesBlock.removeChild(profilesBlock.firstChild);
+  }
 
   for (var i = 0; i < profilesList.length; i++) {
     var profile = profilesList[i];
@@ -41,9 +71,13 @@ function setupProfiles() {
     profilesBlock.appendChild(div);
   }
 
-  if (profilesList.length === 1)
+  if (profilesList.length === 1) {
     document.getElementById('profile-block').classList.add('hidden');
+  } else {
+    document.getElementById('profile-block').classList.remove('hidden');
+  }
 
+  adjustWindowSize(240);
   onProfileChange();
 }
 

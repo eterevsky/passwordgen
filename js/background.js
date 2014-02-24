@@ -1,8 +1,8 @@
 function init(launchData) {
   var options = {
     frame: 'chrome',
-    width: 600,
-    height: 600
+    width: 260,
+    height: 300
   };
 
   chrome.app.window.create('generate.html', options);

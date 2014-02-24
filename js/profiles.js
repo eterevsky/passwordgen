@@ -19,6 +19,8 @@ function Profiles(opt_storage) {
   this.storage_ = opt_storage || getStorage('permanent');
   /** @type {function()} */
   this.onReadyCallbacks_ = [];
+  /** @type {function(boolean)} */
+  this.onChangedListeners_ = [];
 
   this.storage_.get(
       {'profile-ids': [], 'profile-last-used': null},
@@ -28,6 +30,15 @@ function Profiles(opt_storage) {
       this.onPasswordStorageReceived_.bind(this));
   this.storage_.addListener(this.onChanged_.bind(this));
 }
+
+/**
+ * @param {function(boolean)} listener - The boolean parameter is true if
+ * the set of profiles themselves is changed (profile is added, removed or
+ * renamed).
+ */
+Profiles.prototype.addListener = function(listener) {
+  this.onChangedListeners_.push(listener);
+};
 
 Profiles.prototype.isReady = function() {
   return this.ids_ !== null && this.data_ !== null &&
@@ -137,12 +148,18 @@ Profiles.prototype.onDataReceived_ = function(items) {
  * @param {Object} items
  */
 Profiles.prototype.onChanged_ = function(items) {
-  var id;
+  console.log('onChanged_', items);
+  var profileChange = false;
+  var notify = false;
+
   for (var key in items) {
     var value = items[key].newValue;
     switch (key) {
       case 'profile-ids':
+        console.log('profile-ids');
         this.ids_ = value;
+        notify = true;
+        profileChange = true;
         break;
 
       case 'profile-last-used':
@@ -156,13 +173,24 @@ Profiles.prototype.onChanged_ = function(items) {
 
       default:
         if (key.indexOf('profile-') === 0) {
-          id = parseInt(key.substring(8), 10);
+          notify = true;
+          var id = parseInt(key.substring(8), 10);
           if (value) {
+            if (!this.data_[id] || this.data_[id]['name'] !== value['name'])
+              profileChange = true;
             this.data_[id] = value;
           } else {
             delete this.data_[id];
           }
         }
+    }
+  }
+
+  console.log(profileChange, notify);
+
+  if (notify) {
+    for (var i = 0; i < this.onChangedListeners_.length; i++) {
+      this.onChangedListeners_[i](profileChange);
     }
   }
 };
