@@ -24,7 +24,7 @@
       "38": "icons/icon-38.png"
     },
     "default_title": "Password Generator",
-    "default_popup": "popup.html"
+    "default_popup": "generate.html"
   },
   "options_page": "options.html",
   "background": {

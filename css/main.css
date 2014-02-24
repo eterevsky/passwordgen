@@ -217,7 +217,8 @@ h3 {
 
 
 
-#generate-form {
+.web #generate-form,
+.app #generate-form {
   font-size: 120%;
   max-width: 400px;
   margin: 0px auto;
