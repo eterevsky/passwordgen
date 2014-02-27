@@ -2,6 +2,7 @@
 
 var profiles = null;
 var popup = null;
+var domainSettings = null;
 
 
 function init() {
@@ -10,7 +11,7 @@ function init() {
   domainSettings = new DomainSettings(profiles);
 
   if (CONF === 'extension')
-    popup = new Popup();
+    popup = new Popup(domainSettings);
 
   if (CONF === 'app') {
     document.getElementById('button-options').addEventListener(
@@ -20,7 +21,7 @@ function init() {
   document.getElementById('domain').addEventListener('input',
                                                      onDomainChange);
   document.getElementById('password').addEventListener('input',
-                                                       generatePassword);
+                                                       onPasswordChange);
   document.getElementById('button-copy').addEventListener('click', clipboard);
 
   profiles.callWhenReady(setupProfiles);
@@ -78,7 +79,6 @@ function setupProfiles() {
   }
 
   adjustWindowSize(240);
-  onProfileChange();
 }
 
 function getProfile() {
@@ -112,7 +112,7 @@ function onDomainChange() {
   });
 }
 
-function generatePassword() {
+function onPasswordChange() {
   var password = document.getElementById('password').value;
   var profileId = getProfile();
   var passwordStatus = profiles.verifyPassword(profileId, password);
@@ -136,6 +136,13 @@ function generatePassword() {
       break;
   }
 
+  profiles.setPassword(profileId, password);
+  generatePassword();
+}
+
+function generatePassword() {
+  var password = document.getElementById('password').value;
+  var profileId = getProfile();
   var domain = document.getElementById('domain').value;
 
   document.getElementById('generated-password').value = generate(

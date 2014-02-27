@@ -148,7 +148,6 @@ Profiles.prototype.onDataReceived_ = function(items) {
  * @param {Object} items
  */
 Profiles.prototype.onChanged_ = function(items) {
-  console.log('onChanged_', items);
   var profileChange = false;
   var notify = false;
 
@@ -156,7 +155,6 @@ Profiles.prototype.onChanged_ = function(items) {
     var value = items[key].newValue;
     switch (key) {
       case 'profile-ids':
-        console.log('profile-ids');
         this.ids_ = value;
         notify = true;
         profileChange = true;
@@ -185,8 +183,6 @@ Profiles.prototype.onChanged_ = function(items) {
         }
     }
   }
-
-  console.log(profileChange, notify);
 
   if (notify) {
     for (var i = 0; i < this.onChangedListeners_.length; i++) {
@@ -342,7 +338,7 @@ Profiles.prototype.getPassword = function(id, callback) {
 };
 
 /**
- * @param {number} id
+ * @param {number} id - Profile id.
  * @param {string} password
  */
 Profiles.prototype.setPassword = function(id, password) {

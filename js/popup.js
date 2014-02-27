@@ -80,7 +80,7 @@ Popup.prototype.insert_ = function() {
   var domain = document.getElementById('domain').value;
   var profileId = getProfile();
   this.domainSettings_.updateProfile(domain, profileId);
-  this.domainSettings_.updateSubstitute(tabDomain, domain);
+  this.domainSettings_.updateSubstitute(this.tabDomain_, domain);
 };
 
 Popup.prototype.showOptions_ = function() {
