@@ -1,11 +1,7 @@
 Password Generator
 ==================
 
-*The online version of Password Generator is now available at <http://passwordgen.org>.*
-
-Chrome extension that generates passwords based on a master password and current domain. Partly (but not completely) compatible with [PasswordMaker](http://passwordmaker.org).
-
-Install extension [from Chrome WebStore](https://chrome.google.com/webstore/detail/password-generator/klfojgipmkdgfmikjfdhhkjlfeboaoij).
+Generate unique passwords based on one master password and website domains. This service is available online at <http://passwordgen.org> and as [an extension for Chrome](https://chrome.google.com/webstore/detail/password-generator/klfojgipmkdgfmikjfdhhkjlfeboaoij).
 
 The password for each website is generated as a cryptographic hash function from its domain and a master password. Currently MD5, SHA1 and SHA256 are available. When SHA3 is officially released, it will also be added.
 
