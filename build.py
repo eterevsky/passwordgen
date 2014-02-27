@@ -9,8 +9,6 @@ import builder.util as util
 
 FILES = ['css/main.css',
          'css/narrow.css',
-         'css/narrow-options.css',
-         'css/web.css',
          'css/wide.css']
 
 def do_compile(source_dir, app_builder):
@@ -24,7 +22,7 @@ def do_compile(source_dir, app_builder):
   app_builder.copy_file(background_comp, 'js/background.js')
   app_builder.replace_background_js(background_js, 'js/background.js')
 
-  for html_path in ('popup.html', 'options.html'):
+  for html_path in ('generate.html', 'options.html'):
     html_file = File(html_path)
     js_paths = html.extract_local_js(html_file)
     js_files = [File(js_path) for js_path in js_paths]
@@ -49,7 +47,7 @@ def dist(source_dir : File, base_build_path, compile_js=False):
   if compile_js:
     do_compile(source_dir, app_builder)
   else:
-    app_builder.add_html_file(File('popup.html'), 'popup.html', add_js=True)
+    app_builder.add_html_file(File('generate.html'), 'generate.html', add_js=True)
     app_builder.add_html_file(File('options.html'), 'options.html', add_js=True)
 
   return app_builder.build()
