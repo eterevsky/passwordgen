@@ -233,3 +233,23 @@ h3 {
   margin-right: auto;
   width: 100%;
 }
+
+p {
+  font-size: 120%;
+}
+
+dt {
+  font-size: 120%;
+  font-style: italic;
+  margin-bottom: 0.2em;
+}
+
+dd {
+  font-size: 120%;
+  margin-left: 0;
+  margin-bottom: 1em;
+}
+
+li {
+  font-size: 120%;
+}
