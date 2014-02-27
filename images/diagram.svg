@@ -1,38 +1,170 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="0" width="0" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
- <metadata>
-  <rdf:RDF>
-   <cc:Work rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:title/>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <g transform="translate(-109.22321,-104.03668)">
-  <text style="letter-spacing:0px;word-spacing:0px;" font-weight="normal" xml:space="preserve" font-size="12px" font-stretch="normal" line-height="125%" font-variant="normal" y="123.79065" x="114.28571" font-family="Droid Sans Mono" font-style="normal" fill="#000000"><tspan x="114.28571" y="123.79065">http://mail.<tspan fill="#782121">google.com</tspan>/mail/</tspan></text>
-  <g stroke-linejoin="miter" stroke-dashoffset="0" transform="translate(0.9118434,-0.0463116)" stroke="#000" stroke-miterlimit="3.9000001" fill="none">
-   <path d="m0,0,0,0" stroke-width="0.66000003"/>
-   <path d="m0,0,0,0,0,0" stroke-width="0.79400003"/>
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="320"
+   height="240"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-109.22321,-104.03668)"
+     id="layer1">
+    <text
+       x="114.28571"
+       y="123.79065"
+       id="text2985"
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+         x="114.28571"
+         y="123.79065"
+         id="tspan2987">http://mail.<tspan
+   id="tspan3918"
+   style="fill:#782121">google.com</tspan>/mail/</tspan></text>
+    <g
+       transform="translate(0.9118434,-0.0463116)"
+       id="g3803">
+      <path
+         d="m 243.95184,136.65888 0,26.76905 m -14.6472,0 0,-26.76905"
+         id="rect3783"
+         style="fill:none;stroke:#000000;stroke-width:0.66000003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+      <path
+         d="m 247.55172,159.99701 -11.07143,11.07143 -11.78572,-11.78572"
+         id="rect3793"
+         style="fill:none;stroke:#000000;stroke-width:0.79400003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+    </g>
+    <g
+       transform="translate(0,-4.0996094)"
+       id="g3922">
+      <text
+         x="193.86018"
+         y="194.24506"
+         id="text3799"
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+           x="193.86018"
+           y="194.24506"
+           id="tspan3801">'google.com'</tspan></text>
+      <text
+         x="301.92264"
+         y="194.24506"
+         id="text3807"
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"><tspan
+           x="301.92264"
+           y="194.24506"
+           id="tspan3809"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono">+</tspan></text>
+      <text
+         x="330.82495"
+         y="194.24506"
+         id="text3811"
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"><tspan
+           x="330.82495"
+           y="194.24506"
+           id="tspan3813"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono">'<tspan
+   id="tspan3914"
+   style="fill:#800000">my_password</tspan>'</tspan></text>
+    </g>
+    <g
+       transform="translate(69.39422,66.308486)"
+       id="g3803-4">
+      <path
+         d="m 243.95184,136.65888 0,26.76905 m -14.6472,0 0,-26.76905"
+         id="rect3783-3"
+         style="fill:none;stroke:#000000;stroke-width:0.66000003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+      <path
+         d="m 247.55172,159.99701 -11.07143,11.07143 -11.78572,-11.78572"
+         id="rect3793-8"
+         style="fill:none;stroke:#000000;stroke-width:0.79400003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+    </g>
+    <text
+       x="364.88721"
+       y="214.66449"
+       id="text3841"
+       xml:space="preserve"
+       style="font-size:10px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu Italic"><tspan
+         x="364.88721"
+         y="214.66449"
+         id="tspan3843">SHA256</tspan><tspan
+         x="364.88721"
+         y="227.16449"
+         id="tspan3845">hash function</tspan></text>
+    <text
+       x="190.32205"
+       y="256.5647"
+       id="text3847"
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+         x="190.32205"
+         y="256.5647"
+         id="tspan3859">2396941b5be28db495d818bea1dbcdf2</tspan><tspan
+         x="190.32205"
+         y="271.5647"
+         id="tspan3863">f1622208c8edc5b32288d62cd7699b5e</tspan></text>
+    <g
+       transform="translate(69.39422,144.96211)"
+       id="g3803-6">
+      <path
+         d="m 243.95184,136.65888 0,26.76905 m -14.6472,0 0,-26.76905"
+         id="rect3783-4"
+         style="fill:none;stroke:#000000;stroke-width:0.66000003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+      <path
+         d="m 247.55172,159.99701 -11.07143,11.07143 -11.78572,-11.78572"
+         id="rect3793-4"
+         style="fill:none;stroke:#000000;stroke-width:0.79400003;stroke-linejoin:miter;stroke-miterlimit:3.9000001;stroke-opacity:1;stroke-dashoffset:0" />
+    </g>
+    <text
+       x="364.29376"
+       y="293.49945"
+       id="text3889"
+       xml:space="preserve"
+       style="font-size:10px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu Italic"><tspan
+         x="364.29376"
+         y="293.49945"
+         id="tspan3891">custom character</tspan><tspan
+         x="364.29376"
+         y="305.99945"
+         id="tspan3893">set &amp; length</tspan></text>
+    <text
+       x="276.36111"
+       y="335.15387"
+       id="text3906"
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono Bold"><tspan
+         x="276.36111"
+         y="335.15387"
+         id="tspan3908"
+         style="font-weight:bold;-inkscape-font-specification:Droid Sans Mono Bold">K809dypv</tspan></text>
+    <text
+       x="260.61935"
+       y="153.78987"
+       id="text3910"
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"><tspan
+         x="260.61935"
+         y="153.78987"
+         id="tspan3912"
+         style="font-size:10px;font-style:italic;fill:#4d4d4d;-inkscape-font-specification:Ubuntu Italic">get domain name</tspan></text>
   </g>
-  <g font-size="12px" transform="translate(0,-4.0996094)" font-stretch="normal" font-variant="normal" font-weight="normal" font-style="normal" fill="#000000">
-   <text style="letter-spacing:0px;word-spacing:0px;" line-height="125%" y="194.24506" x="193.86018" font-family="Droid Sans Mono" xml:space="preserve"><tspan y="194.24506" x="193.86018">&apos;google.com&apos;</tspan></text>
-   <text style="letter-spacing:0px;word-spacing:0px;" line-height="125%" y="194.24506" x="301.92264" font-family="Ubuntu" xml:space="preserve"><tspan font-weight="normal" font-size="12px" font-style="normal" font-stretch="normal" font-variant="normal" y="194.24506" x="301.92264" font-family="Droid Sans Mono">+</tspan></text>
-   <text style="letter-spacing:0px;word-spacing:0px;" line-height="125%" y="194.24506" x="330.82495" font-family="Ubuntu" xml:space="preserve"><tspan font-weight="normal" font-style="normal" font-stretch="normal" font-variant="normal" y="194.24506" x="330.82495" font-family="Droid Sans Mono">&apos;<tspan fill="#800000">my_password</tspan>&apos;</tspan></text>
-  </g>
-  <g stroke-linejoin="miter" stroke-dashoffset="0" transform="translate(69.39422,66.308486)" stroke="#000" stroke-miterlimit="3.9000001" fill="none">
-   <path d="m0,0,0,0" stroke-width="0.66000003"/>
-   <path d="m0,0,0,0,0,0" stroke-width="0.79400003"/>
-  </g>
-  <text style="letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-weight="normal" xml:space="preserve" font-size="10px" font-style="italic" font-stretch="normal" font-variant="normal" y="214.66449" x="364.88721" font-family="Ubuntu" line-height="125%" fill="#4d4d4d"><tspan x="364.88721" y="214.66449">SHA256</tspan><tspan x="364.88721" y="227.16449">hash function</tspan></text>
-  <text style="letter-spacing:0px;word-spacing:0px;" font-weight="normal" xml:space="preserve" font-size="12px" font-stretch="normal" line-height="125%" font-variant="normal" y="256.5647" x="190.32205" font-family="Droid Sans Mono" font-style="normal" fill="#000000"><tspan x="190.32205" y="256.5647">2396941b5be28db495d818bea1dbcdf2</tspan><tspan x="190.32205" y="271.5647">f1622208c8edc5b32288d62cd7699b5e</tspan></text>
-  <g stroke-linejoin="miter" stroke-dashoffset="0" transform="translate(69.39422,144.96211)" stroke="#000" stroke-miterlimit="3.9000001" fill="none">
-   <path d="m0,0,0,0" stroke-width="0.66000003"/>
-   <path d="m0,0,0,0,0,0" stroke-width="0.79400003"/>
-  </g>
-  <text style="letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-weight="normal" xml:space="preserve" font-size="10px" font-style="italic" font-stretch="normal" font-variant="normal" y="293.49945" x="364.29376" font-family="Ubuntu" line-height="125%" fill="#4d4d4d"><tspan x="364.29376" y="293.49945">custom character</tspan><tspan x="364.29376" y="305.99945">set &amp; length</tspan></text>
-  <text style="letter-spacing:0px;word-spacing:0px;" font-weight="bold" xml:space="preserve" font-size="12px" font-stretch="normal" line-height="125%" font-variant="normal" y="335.15387" x="276.36111" font-family="Droid Sans Mono" font-style="normal" fill="#008000"><tspan y="335.15387" x="276.36111" font-weight="bold">K809dypv</tspan></text>
-  <text style="letter-spacing:0px;word-spacing:0px;" font-weight="normal" xml:space="preserve" font-size="12px" font-stretch="normal" line-height="125%" font-variant="normal" y="153.78987" x="260.61935" font-family="Ubuntu" font-style="normal" fill="#000000"><tspan font-size="10px" font-style="italic" y="153.78987" x="260.61935" fill="#4d4d4d">get domain name</tspan></text>
- </g>
 </svg>
