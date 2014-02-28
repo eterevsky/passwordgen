@@ -33,7 +33,7 @@
        y="123.79065"
        id="text2985"
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono,Menlo,Courier,monospace"><tspan
          x="114.28571"
          y="123.79065"
          id="tspan2987">http://mail.<tspan
@@ -59,7 +59,7 @@
          y="194.24506"
          id="text3799"
          xml:space="preserve"
-         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono,Menlo,Courier,monospace"><tspan
            x="193.86018"
            y="194.24506"
            id="tspan3801">'google.com'</tspan></text>
@@ -72,7 +72,7 @@
            x="301.92264"
            y="194.24506"
            id="tspan3809"
-           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono">+</tspan></text>
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono,Menlo,Courier,monospace">+</tspan></text>
       <text
          x="330.82495"
          y="194.24506"
@@ -82,7 +82,7 @@
            x="330.82495"
            y="194.24506"
            id="tspan3813"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono">'<tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono,Menlo,Courier,monospace">'<tspan
    id="tspan3914"
    style="fill:#800000">my_password</tspan>'</tspan></text>
     </g>
@@ -115,7 +115,7 @@
        y="256.5647"
        id="text3847"
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"><tspan
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono,Menlo,Courier,monospace"><tspan
          x="190.32205"
          y="256.5647"
          id="tspan3859">2396941b5be28db495d818bea1dbcdf2</tspan><tspan
@@ -151,11 +151,11 @@
        y="335.15387"
        id="text3906"
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono Bold"><tspan
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;font-family:Droid Sans Mono,Menlo,Courier,monospace Bold"><tspan
          x="276.36111"
          y="335.15387"
          id="tspan3908"
-         style="font-weight:bold;-inkscape-font-specification:Droid Sans Mono Bold">K809dypv</tspan></text>
+         style="font-weight:bold Bold">K809dypv</tspan></text>
     <text
        x="260.61935"
        y="153.78987"
