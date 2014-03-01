@@ -24,6 +24,7 @@ body.app {
 
 .web h1 {
   text-align: center;
+  margin-bottom: 0;
 }
 
 .extension .menu,
@@ -33,14 +34,14 @@ body.app {
 
 .web .menu {
   text-align: center;
-  margin-bottom: 2em;
 }
 
 .menu a, .menu span {
   border: 1px solid #333;
   border-radius: 2px;
+  display: inline-block;
   font-size: 120%;
-  margin: 0 10px;
+  margin: 10px;
   padding: 5px;
   text-decoration: none;
 }
@@ -131,7 +132,7 @@ input[type="password"], input[type="text"] {
 /* options.html */
 
 h2 {
-  margin-top: 0;
+  margin-bottom: 0.5em;
 }
 
 h3 {
@@ -232,6 +233,11 @@ h3 {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+.webstore {
+  float: right;
+  margin: 10px;
 }
 
 p {
