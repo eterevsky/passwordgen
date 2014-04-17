@@ -1,0 +1,29 @@
+CACHE MANIFEST
+# v1 - update that number when content changes
+
+CACHE:
+index.html
+generate.html
+options.html
+css\main.css
+css\narrow.css
+css\wide.css
+images\ChromeWebStore_BadgeWBorder_v2_206x58.png
+images\diagram.svg
+js\analytics.js
+js\biguint.js
+js\domain-settings.js
+js\main.js
+js\mstrings.js
+js\options.js
+js\popup.js
+js\profiles.js
+js\storage.js
+js\util.js
+jshash\md5.js
+jshash\sha1.js
+jshash\sha256.js
+
+# it allows resources outside manifest being loaded
+NETWORK:
+*
