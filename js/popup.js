@@ -4,31 +4,44 @@
  * @file Here goes all the code, specific to Chrome Extension.
  */
 
-// Maybe use a complete list? It's too long though.
-var EFFECTIVE_TLD = ['com.au', 'co.uk', 'co.jp'];
+function domainFromURL(url, opt_tld, opt_children_tld, opt_not_tld) {
+  if (!opt_tld) {
+    opt_tld = EFFECTIVE_TLD;
+    opt_children_tld = CHILDREN_TLD;
+    opt_not_tld = NOT_TLD;
+  }
 
-function domainFromURL(url) {
-  var fullDomain = url.match(/^\w+:\/\/((?:\w[-\w\d]*\.)*\w[-\w\d]*)\/.*/)[1];
+  var fullDomain = url.match(/^(?:\w+:\/\/)?((?:\w[-\w\d]*\.)*\w[-\w\d]*)(?:\/.*)?/)[1];
   if (!fullDomain)
     return null;
 
   var parts = fullDomain.split('.');
   if (parts.length <= 2)
     return fullDomain;
-  var third = false;
-  for (var i = 0; i < EFFECTIVE_TLD.length; i++) {
-    var tld = EFFECTIVE_TLD[i];
-    if (fullDomain.indexOf(tld, fullDomain.length - tld.length) != -1) {
-      third = true;
+
+  var startDomainPart = parts.length - 2;
+  for (var i = 0; i < parts.length; i++) {
+    var domainSuffix = parts.slice(i).join('.');
+    if (opt_not_tld.indexOf(domainSuffix) >= 0) {
+      startDomainPart = i;
+      break;
+    }
+
+    if (opt_children_tld.indexOf(domainSuffix) >= 0) {
+      startDomainPart = i - 2;
+      break;
+    }
+
+    if (opt_tld.indexOf(domainSuffix) >= 0) {
+      startDomainPart = i - 1;
       break;
     }
   }
 
-  if (third) {
-    return parts.slice(parts.length - 3).join('.');
-  } else {
-    return parts.slice(parts.length - 2).join('.');
-  }
+  if (startDomainPart < 0)
+    startDomainPart = 0;
+
+  return parts.slice(startDomainPart).join('.');
 }
 
 /**
@@ -87,3 +100,6 @@ Popup.prototype.showOptions_ = function() {
   chrome.tabs.create({'url': 'options.html'});
 };
 
+if (typeof exports !== 'undefined') {
+  exports.domainFromURL = domainFromURL;
+}

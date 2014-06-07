@@ -23,6 +23,7 @@ js\util.js
 jshash\md5.js
 jshash\sha1.js
 jshash\sha256.js
+tld\tld.js
 
 # it allows resources outside manifest being loaded
 NETWORK:

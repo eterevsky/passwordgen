@@ -6,9 +6,8 @@
  * Long unsigned integers represented for simplicity as byte arrays. 0 byte is
  * the least significant.
  *
- * This constructor should be called mainly from other static functions. Outside
- * code should use fromInt(), fromRawStr and other functions to create BigUInt
- * instance.
+ * This constructor is private. External code should use fromInt(), fromRawStr
+ * and other functions to create BigUInt instance.
  */
 function BigUInt(digits) {
   this.digits_ = digits;
