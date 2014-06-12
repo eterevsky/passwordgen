@@ -121,11 +121,15 @@ input[type="password"], input[type="text"] {
 }
 
 .app #button-insert,
-.web #button-insert {
+.web #button-insert,
+.web #button-options,
+.web #button-copy {
   display: none;
 }
 
-.web #button-options {
+.app #button-select,
+.extension #button-select,
+.android #button-select {
   display: none;
 }
 

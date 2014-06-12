@@ -18,11 +18,19 @@ function init() {
         'click', openOptionsWindow);
   }
 
+  if (navigator.userAgent.match(/Android/i)) {
+    // Make generated password field non-readonly on Android since otherwise
+    // it's impossible to select its contents.
+    document.getElementById('generated-password').readOnly = false;
+    document.getElementsByTagName('body')[0].classList.add('android');
+  }
+
   document.getElementById('domain').addEventListener('input',
                                                      onDomainChange);
   document.getElementById('password').addEventListener('input',
                                                        onPasswordChange);
   document.getElementById('button-copy').addEventListener('click', clipboard);
+  document.getElementById('button-select').addEventListener('click', clipboard);
 
   profiles.callWhenReady(setupProfiles);
   profiles.addListener(profileListener);
@@ -145,8 +153,8 @@ function generatePassword() {
   var profileId = getProfile();
   var domain = document.getElementById('domain').value;
 
-  document.getElementById('generated-password').value = generate(
-      profileId, domain, password);
+  document.getElementById('generated-password').value =
+      generate(profileId, domain, password);
 }
 
 function clipboard() {
